@@ -1,0 +1,9 @@
+todo {
+  display: flex;
+}
+.todo-block {
+  width: 30vw;
+  min-height: 20vw;
+  display: flex;
+  border: 1px solid #000000;
+}
