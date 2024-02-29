@@ -1,5 +1,6 @@
 todo {
   display: flex;
+  justify-content: space-between;
 }
 .todo-block {
   width: 30vw;
