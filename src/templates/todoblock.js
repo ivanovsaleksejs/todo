@@ -1,5 +1,5 @@
-const todoBlock = {
-  props: { className: "todo-block" }
-}
+const todoBlock = (className = "todo-block") => ({
+  props: { className: className }
+})
 
 export default todoBlock

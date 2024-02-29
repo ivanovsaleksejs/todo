@@ -5,4 +5,6 @@ const state = {}
 
 console.log(todo)
 
-document.addEventListener('load', element(todo).appendTo(document.body))
+const todoElement = element(todo)
+
+document.addEventListener('load', todoElement.appendTo(document.body))
