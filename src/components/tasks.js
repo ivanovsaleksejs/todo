@@ -1,0 +1,93 @@
+import { fetchActiveWorkspace } from '/components/workspace.js'
+import { getProjectList, fetchProjectList, fetchActiveProject, getProject } from '/components/projects.js'
+import { redrawBlocks } from '/components/todoblock.js'
+import { form, formRow } from '/components/form.js'
+import showPopup from '/components/popup.js'
+
+const fetchTaskList = _ => JSON.parse(localStorage.getItem("tasks")) ?? {}
+
+const storeTaskList = list => { localStorage.setItem("tasks", JSON.stringify(list)) }
+
+const getTasksByProject = (project = null, list = null) => Object.entries(fetchTaskList()).filter(t => (!project || t[1].project == project) && (!list || t[1].todoList == list))
+
+const getTasksByList = list => Object.entries(fetchTaskList()).filter(t => t[1].todoList == list)
+
+const saveTaskEvent = state => e =>
+{
+  e.preventDefault()
+  const formdata = new FormData(e.target)
+  const taskName = formdata.get("taskname")
+  const projectId = formdata.get("project")
+  const project = getProject(projectId)
+  const description = formdata.get("taskdescription")
+  const todoList = "planned"
+  const projectTasks = getTasksByProject(projectId)
+  const code = `${project.code}-${projectTasks.length ? (Math.max(...(projectTasks.map(t => +t[1].code.split('-')[1])))+1) : 1}`
+  saveTask(state, taskName, projectId, description, todoList, code)
+  state.popup.close()
+}
+
+const saveTask = (state, taskName, project, description, todoList, code) =>
+{
+  const list = state.todo.tasks.list
+  list[crypto.randomUUID()] = { name: taskName, project: project, description: description, todoList: todoList, code: code }
+  state.todo.tasks.list = list
+  redrawBlocks(state)
+}
+
+const addTaskForm = state =>
+  form("Add new task",
+    {
+      taskName: formRow("Task name", { name: "input", props: { name: "taskname" } }),
+      taskProject: formRow("Project", {
+        name: "select",
+        props: { name: "project" },
+        children: getProjectList(fetchProjectList(), fetchActiveWorkspace(), fetchActiveProject())
+      }),
+      taskDescription: formRow("Description", { name: "textarea", props: { name: "taskdescription" } }),
+      submit: { name: "input", props: { type: "submit" } }
+    },
+    {
+      listeners: {
+        submit: saveTaskEvent(state)
+      }
+    }
+  )
+
+const bindTasks = state =>
+({
+  set: val => {
+    storeTaskList(val)
+    redrawBlocks(state)
+  },
+  get: _ => {
+    let list = fetchTaskList()
+    storeTaskList(list)
+    return list
+  }
+})
+
+const tasks = state =>
+({
+  bindings: {
+    list: bindTasks(state)
+  }
+})
+
+const taskLegend = (state, [id, task]) =>
+({
+  name: "tasklegend",
+  props: {
+    style: { backgroundColor: getProject(task.project).color },
+    innerText: task.code,
+    draggable: true
+  },
+  listeners: {
+    dragstart: e => {
+      state.todo.todoblocks.node.classList.add('dragging')
+      e.dataTransfer.setData("task", id)
+    }
+  }
+})
+
+export { addTaskForm, tasks, getTasksByProject, taskLegend }

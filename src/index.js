@@ -1,10 +1,9 @@
 import element from '/element.js'
-import todo from '/templates/todo.js'
+import todo from '/components/todo.js'
 
 const state = {}
 
-console.log(todo)
-
-const todoElement = element(todo)
-
-document.addEventListener('load', todoElement.appendTo(document.body))
+window.addEventListener("load", async _ => {
+  state.todo = await element(todo(state))
+  state.todo.appendTo(document.body)
+})
