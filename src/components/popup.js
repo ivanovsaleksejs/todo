@@ -1,4 +1,4 @@
-import element from '/element.js'
+import element from '../element.js'
 
 const popup = (content, state) =>
 ({
