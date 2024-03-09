@@ -1,5 +1,5 @@
-import element from '/element.js'
-import todo from '/components/todo.js'
+import element from './element.js'
+import todo from './components/todo.js'
 
 const state = {}
 

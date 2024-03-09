@@ -1,7 +1,7 @@
-import { getWorkspaceList, fetchWorkspaceList, fetchActiveWorkspace } from '/components/workspace.js'
-import { redrawBlocks } from '/components/todoblock.js'
-import { form, formRow } from '/components/form.js'
-import showPopup from '/components/popup.js'
+import { getWorkspaceList, fetchWorkspaceList, fetchActiveWorkspace } from './workspace.js'
+import { redrawBlocks } from './todoblock.js'
+import { form, formRow } from './form.js'
+import showPopup from './popup.js'
 
 const getProjectCode = name => name.slice(5).toUpperCase()
 

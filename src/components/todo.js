@@ -1,8 +1,8 @@
-import { todoBlock } from '/components/todoblock.js'
-import { workspace } from '/components/workspace.js'
-import { project }   from '/components/projects.js'
-import { tasks }     from '/components/tasks.js'
-import actions       from '/components/actions.js'
+import { todoBlock } from './todoblock.js'
+import { workspace } from './workspace.js'
+import { project }   from './projects.js'
+import { tasks }     from './tasks.js'
+import actions       from './actions.js'
 
 const todo = state =>
 ({

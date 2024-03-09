@@ -1,6 +1,6 @@
-import showPopup from '/components/popup.js'
-import { addTaskForm } from '/components/tasks.js'
-import { addProjectForm } from '/components/projects.js'
+import showPopup from './popup.js'
+import { addTaskForm } from './tasks.js'
+import { addProjectForm } from './projects.js'
 
 const actions = state =>
 ({

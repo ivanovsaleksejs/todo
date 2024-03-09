@@ -1,5 +1,5 @@
-import { fetchActiveProject } from '/components/projects.js'
-import { getTasksByProject, taskLegend } from '/components/tasks.js'
+import { fetchActiveProject } from './projects.js'
+import { getTasksByProject, taskLegend } from './tasks.js'
 
 const redrawBlocks = state =>
   Object.values(state.todo.todoblocks.children).map(b => {

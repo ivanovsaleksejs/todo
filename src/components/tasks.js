@@ -1,8 +1,8 @@
-import { fetchActiveWorkspace } from '/components/workspace.js'
-import { getProjectList, fetchProjectList, fetchActiveProject, getProject } from '/components/projects.js'
-import { redrawBlocks } from '/components/todoblock.js'
-import { form, formRow } from '/components/form.js'
-import showPopup from '/components/popup.js'
+import { fetchActiveWorkspace } from './workspace.js'
+import { getProjectList, fetchProjectList, fetchActiveProject, getProject } from './projects.js'
+import { redrawBlocks } from './todoblock.js'
+import { form, formRow } from './form.js'
+import showPopup from './popup.js'
 
 const fetchTaskList = _ => JSON.parse(localStorage.getItem("tasks")) ?? {}
 

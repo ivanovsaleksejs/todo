@@ -1,6 +1,6 @@
-import { getProjectList, fetchProjectList } from '/components/projects.js'
-import { form, formRow } from '/components/form.js'
-import showPopup from '/components/popup.js'
+import { getProjectList, fetchProjectList } from './projects.js'
+import { form, formRow } from './form.js'
+import showPopup from './popup.js'
 
 const saveWorkspaceEvent = state => e =>
 {
