@@ -77,7 +77,7 @@ const addProjectForm = state =>
     }
   )
 
-const bindProject = state =>
+const bindProjectList = state =>
 ({
   set: (val) => {
     storeProjectList(val)
@@ -107,7 +107,7 @@ const project = state =>
       props: { id: "project-selector" },
       children: getProjectList(fetchProjectList(), fetchActiveWorkspace(), fetchActiveProject()),
       bindings: {
-        list: bindProject(state)
+        list: bindProjectList(state)
       },
       listeners: {
         change: setActiveProject(state)

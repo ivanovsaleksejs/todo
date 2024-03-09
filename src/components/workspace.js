@@ -50,7 +50,7 @@ const addWorkspaceForm = state =>
     }
   )
 
-const bindWorkspace = state =>
+const bindWorkspaceList = state =>
 ({
   set: val => {
     storeWorkspaceList(val)
@@ -83,7 +83,7 @@ const workspace = state =>
       props: { id: "workspace-selector" },
       children: getWorkspaceList(fetchWorkspaceList(), state, fetchActiveWorkspace()),
       bindings: {
-        list: bindWorkspace(state)
+        list: bindWorkspaceList(state)
       },
       listeners: {
         change: setActiveWorkspace(state)

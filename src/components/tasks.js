@@ -54,7 +54,7 @@ const addTaskForm = state =>
     }
   )
 
-const bindTasks = state =>
+const bindTaskList = state =>
 ({
   set: val => {
     storeTaskList(val)
@@ -70,7 +70,7 @@ const bindTasks = state =>
 const tasks = state =>
 ({
   bindings: {
-    list: bindTasks(state)
+    list: bindTaskList(state)
   }
 })
 
