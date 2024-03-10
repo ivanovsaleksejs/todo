@@ -8,6 +8,11 @@ const redrawBlocks = _ =>
     b.todoField.prepareNode(true)
   })
 
+const togglePreview = e => {
+  let node = e.target.component.parent.parent.node
+  e.target.checked ? node.classList.add("preview") : node.classList.remove("preview")
+}
+
 const todoBlock = (blockName, type, className = "todo-block") =>
 ({
   name: "fieldset",
@@ -16,6 +21,16 @@ const todoBlock = (blockName, type, className = "todo-block") =>
     legend: {
       props: {
         innerText: blockName
+      },
+      children: {
+        preview: {
+          name: "input",
+          props: { id: `${type}-preview`, type: "checkbox" },
+          listeners: {
+            change: togglePreview
+          }
+        },
+        label: { props: { htmlFor: `${type}-preview`, innerText: "Toggle preview" } }
       }
     },
     todoField: {

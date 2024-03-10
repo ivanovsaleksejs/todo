@@ -99,8 +99,11 @@ const taskLegend = ([id, task]) =>
   props: {
     style: { backgroundColor: getProject(task.project).color },
     innerText: task.code,
-    draggable: true,
-    title: task.name
+    draggable: true
+  },
+  children: {
+    info: {},
+    tooltip: { props: { innerText: task.name } }
   },
   listeners: {
     dragstart: e => {

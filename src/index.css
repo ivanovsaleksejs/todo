@@ -35,6 +35,7 @@ popup {
   border: 1px solid #000000;
   border-radius: 0.3vw;
   background: #FFFFFF;
+  z-index: 1;
 }
 popup closebutton {
   position: absolute;
@@ -60,21 +61,61 @@ tasklegend {
   text-shadow: 0 0 3px #000000;
   cursor: pointer;
   position: relative;
+  display: flex;
 }
-/*tasklegend[title]:hover::after {
+tasklegend info {
+  width: 1em;
+  height: 1em;
+  display: flex;
+  border: 1px solid #FFFFFF;
+  border-radius: 50%;
+  justify-content: center;
+  font-size: 0.9em;
+  text-shadow: none;
+  margin-left: 0.5em;
+}
+tasklegend info:after {
+  content: "\2139";
+}
+tasklegend tooltip {
   content: attr(title);
-  padding: 0.3vw 0.7vw;
-  border-radius: 0.2vw;
   position: absolute;
   top: -100%;
+  padding: 0.3vw 0.7vw;
+  border-radius: 0.2vw;
   background: #FFFFFF;
   color: #000000;
   text-shadow: none;
   border: 1px solid #000000;
-  z-index: 1;
   white-space: nowrap;
-  transition: all .4s ease-in-out;
-}*/
+  z-index: 1;
+  opacity: 0;
+  transition: all .05s ease-in-out;
+  transform: scale(0);
+}
+tasklegend info:hover ~ tooltip {
+  transform: scale(1);
+  opacity: 1;
+}
+tasklegend:active tooltip {
+  transform: scale(0);
+  opacity: 0;
+}
+.preview tasklegend {
+  width: 100%;
+}
+.preview tasklegend info {
+  display: none;
+}
+.preview tasklegend tooltip {
+  position: relative;
+  opacity: 1;
+  transform: scale(1);
+  border: 0;
+  padding: 0 0.5vw;
+  margin-left: 1em;
+  border-radius: 0.1vw;
+}
 taskview {
   display: flex;
   flex-direction: column;
