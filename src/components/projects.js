@@ -2,6 +2,7 @@ import { getWorkspaceList, fetchWorkspaceList, fetchActiveWorkspace } from './wo
 import { redrawBlocks } from './todoblock.js'
 import { form, formRow } from './form.js'
 import showPopup from './popup.js'
+import { randomUUID } from '../functions.js'
 
 const getProjectCode = name => name.slice(5).toUpperCase()
 
@@ -47,7 +48,7 @@ const saveProjectEvent = state => e =>
 const saveProject = (state, projectName, projectColor, workspace, code) =>
 {
   const list = state.todo.project.select.list
-  list[crypto.randomUUID()] = { name: projectName, color: projectColor, workspace: workspace, code: code }
+  list[randomUUID()] = { name: projectName, color: projectColor, workspace: workspace, code: code }
   state.todo.project.select.list = list
 }
 

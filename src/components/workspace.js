@@ -1,6 +1,7 @@
 import { getProjectList, fetchProjectList } from './projects.js'
 import { form, formRow } from './form.js'
 import showPopup from './popup.js'
+import { randomUUID } from '../functions.js'
 
 const saveWorkspaceEvent = state => e =>
 {
@@ -13,7 +14,7 @@ const saveWorkspaceEvent = state => e =>
 const saveWorkspace = (state, workspaceName) =>
 {
   const list = state.todo.workspace.select.list
-  list[crypto.randomUUID()] = workspaceName
+  list[randomUUID()] = workspaceName
   state.todo.workspace.select.list = list
 }
 

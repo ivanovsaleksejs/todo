@@ -3,6 +3,7 @@ import { getProjectList, fetchProjectList, fetchActiveProject, getProject } from
 import { redrawBlocks } from './todoblock.js'
 import { form, formRow } from './form.js'
 import showPopup from './popup.js'
+import { randomUUID } from '../functions.js'
 
 const fetchTaskList = _ => JSON.parse(localStorage.getItem("tasks")) ?? {}
 
@@ -30,7 +31,7 @@ const saveTaskEvent = state => e =>
 const saveTask = (state, taskName, project, description, todoList, code) =>
 {
   const list = state.todo.tasks.list
-  list[crypto.randomUUID()] = { name: taskName, project: project, description: description, todoList: todoList, code: code }
+  list[randomUUID()] = { name: taskName, project: project, description: description, todoList: todoList, code: code }
   state.todo.tasks.list = list
   redrawBlocks(state)
 }
