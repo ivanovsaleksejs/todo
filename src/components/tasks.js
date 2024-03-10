@@ -75,18 +75,32 @@ const tasks = state =>
   }
 })
 
+const taskView = task =>
+({
+  taskview: {
+    children: {
+      taskname: { props: { innerText: task.name } },
+      description: { props: { innerText: task.description } }
+    }
+  }
+})
+
 const taskLegend = (state, [id, task]) =>
 ({
   name: "tasklegend",
   props: {
     style: { backgroundColor: getProject(task.project).color },
     innerText: task.code,
-    draggable: true
+    draggable: true,
+    title: task.name
   },
   listeners: {
     dragstart: e => {
       state.todo.todoblocks.node.classList.add('dragging')
       e.dataTransfer.setData("task", id)
+    },
+    click: e => {
+      showPopup(taskView(task), state)
     }
   }
 })
