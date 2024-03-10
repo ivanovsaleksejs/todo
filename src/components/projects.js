@@ -1,8 +1,9 @@
 import { getWorkspaceList, fetchWorkspaceList, fetchActiveWorkspace } from './workspace.js'
 import { redrawBlocks } from './todoblock.js'
 import { form, formRow } from './form.js'
-import showPopup from './popup.js'
 import { randomUUID } from '../functions.js'
+import showPopup from './popup.js'
+import state     from '../state.js'
 
 const getProjectCode = name => name.slice(5).toUpperCase()
 
@@ -33,7 +34,7 @@ const getProjectList = (val, workspace = null, active = null) =>
 
 const getProject = id => fetchProjectList()[id]
 
-const saveProjectEvent = state => e =>
+const saveProjectEvent = e =>
 {
   e.preventDefault()
   const formdata = new FormData(e.target)
@@ -41,45 +42,43 @@ const saveProjectEvent = state => e =>
   const projectColor = formdata.get("projectcolor")
   const workspace = formdata.get("workspace")
   const code = projectName.replace(/\s+/, '').slice(0, 5).toUpperCase()
-  saveProject(state, projectName, projectColor, workspace, code)
+  saveProject(projectName, projectColor, workspace, code)
   state.popup.close()
 }
 
-const saveProject = (state, projectName, projectColor, workspace, code) =>
+const saveProject = (projectName, projectColor, workspace, code) =>
 {
   const list = state.todo.project.select.list
   list[randomUUID()] = { name: projectName, color: projectColor, workspace: workspace, code: code }
   state.todo.project.select.list = list
 }
 
-const addProjectForm = state =>
-  form("Add new project",
-    {
-      projectName: formRow("Project name", { name: "input", props: { name: "projectname" } }),
-      projectColor: formRow("Project color", {
-        name: "input",
-        props: {
-          name: "projectcolor",
-          type: "color",
-          value: "#" + (Math.random()*16777216 >>> 0).toString(16).padStart(6, '0')
-        }
-      }),
-      projectWorkspace: formRow("Workspace", {
-        name: "select",
-        props: { name: "workspace" },
-        children: getWorkspaceList(fetchWorkspaceList(), state, fetchActiveWorkspace())
-      }),
-      submit: { name: "input", props: { type: "submit" } }
-    },
-    {
-      listeners: {
-        submit: saveProjectEvent(state)
+const addProjectForm = _ => form("Add new project",
+  {
+    projectName: formRow("Project name", { name: "input", props: { name: "projectname" } }),
+    projectColor: formRow("Project color", {
+      name: "input",
+      props: {
+        name: "projectcolor",
+        type: "color",
+        value: "#" + (Math.random()*16777216 >>> 0).toString(16).padStart(6, '0')
       }
+    }),
+    projectWorkspace: formRow("Workspace", {
+      name: "select",
+      props: { name: "workspace" },
+      children: getWorkspaceList(fetchWorkspaceList(), fetchActiveWorkspace())
+    }),
+    submit: { name: "input", props: { type: "submit" } }
+  },
+  {
+    listeners: {
+      submit: saveProjectEvent
     }
-  )
+  }
+)
 
-const bindProjectList = state =>
-({
+const bindProjectList = {
   set: (val) => {
     storeProjectList(val)
     state.todo.project.select.children = getProjectList(val, fetchActiveWorkspace())
@@ -90,11 +89,11 @@ const bindProjectList = state =>
     storeProjectList(list)
     return list
   }
-})
+}
 
-const setActiveProject = state => e => state.todo.project.activeProject = e.target.options[e.target.selectedIndex].value
+const setActiveProject = e => state.todo.project.activeProject = e.target.options[e.target.selectedIndex].value
 
-const project = state =>
+const project = _ =>
 ({
   children: {
     label: {
@@ -108,17 +107,17 @@ const project = state =>
       props: { id: "project-selector" },
       children: getProjectList(fetchProjectList(), fetchActiveWorkspace(), fetchActiveProject()),
       bindings: {
-        list: bindProjectList(state)
+        list: bindProjectList
       },
       listeners: {
-        change: setActiveProject(state)
+        change: setActiveProject
       }
     },
     button: {
       props: { innerText: "Add project" },
       listeners: {
         click: e => {
-          showPopup(addProjectForm(state), state)
+          showPopup(addProjectForm())
         }
       }
     }
@@ -127,7 +126,7 @@ const project = state =>
     activeProject: {
       set: val => {
         storeActiveProject(val)
-        redrawBlocks(state)
+        redrawBlocks()
       },
       get: fetchActiveProject
     }

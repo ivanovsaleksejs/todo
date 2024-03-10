@@ -1,13 +1,14 @@
-import { fetchActiveProject } from './projects.js'
 import { getTasksByProject, taskLegend } from './tasks.js'
+import { fetchActiveProject } from './projects.js'
+import state from '../state.js'
 
-const redrawBlocks = state =>
+const redrawBlocks = _ =>
   Object.values(state.todo.todoblocks.children).map(b => {
     b.todoField.node.classList.remove("current")
     b.todoField.prepareNode(true)
   })
 
-const todoBlock = (state, blockName, type, className = "todo-block") =>
+const todoBlock = (blockName, type, className = "todo-block") =>
 ({
   name: "fieldset",
   props: { className: className },
@@ -21,7 +22,7 @@ const todoBlock = (state, blockName, type, className = "todo-block") =>
       fieldType: type,
       preRender: {
         getChildren: obj => {
-          obj.children = Object.assign({}, getTasksByProject(fetchActiveProject(), type).map(t => taskLegend(state, t)))
+          obj.children = Object.assign({}, getTasksByProject(fetchActiveProject(), type).map(t => taskLegend(t)))
         }
       },
       listeners: {

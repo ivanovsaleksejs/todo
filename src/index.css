@@ -61,7 +61,7 @@ tasklegend {
   cursor: pointer;
   position: relative;
 }
-tasklegend[title]:hover::after {
+/*tasklegend[title]:hover::after {
   content: attr(title);
   padding: 0.3vw 0.7vw;
   border-radius: 0.2vw;
@@ -74,7 +74,7 @@ tasklegend[title]:hover::after {
   z-index: 1;
   white-space: nowrap;
   transition: all .4s ease-in-out;
-}
+}*/
 taskview {
   display: flex;
   flex-direction: column;

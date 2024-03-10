@@ -1,6 +1,7 @@
 import element from '../element.js'
+import state   from '../state.js'
 
-const popup = (content, state) =>
+const popup = content =>
 ({
   name: "popup",
   close: _ => {
@@ -19,12 +20,12 @@ const popup = (content, state) =>
   }
 })
 
-const showPopup = (content, state) =>
+const showPopup = (content) =>
 {
   if (state.popup) {
     state.popup.close()
   }
-  state.popup = element(popup(content, state))
+  state.popup = element(popup(content))
   state.popup.appendTo(document.body)
 }
 

@@ -1,8 +1,9 @@
-import showPopup from './popup.js'
 import { addTaskForm } from './tasks.js'
 import { addProjectForm } from './projects.js'
+import showPopup from './popup.js'
+import state     from '../state.js'
 
-const actions = state =>
+const actions = _ =>
 ({
   children: {
     addTask: {
@@ -10,7 +11,7 @@ const actions = state =>
       props: { innerText: "Add task" },
       listeners: {
         click: e => {
-          showPopup(addTaskForm(state), state)
+          showPopup(addTaskForm())
         }
       }
     },

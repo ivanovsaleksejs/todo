@@ -1,17 +1,18 @@
 import { getProjectList, fetchProjectList } from './projects.js'
 import { form, formRow } from './form.js'
+import { randomUUID }    from '../functions.js'
 import showPopup from './popup.js'
-import { randomUUID } from '../functions.js'
+import state     from '../state.js'
 
-const saveWorkspaceEvent = state => e =>
+const saveWorkspaceEvent = e =>
 {
   e.preventDefault()
   const workspaceName = (new FormData(e.target)).get("workspacename")
-  saveWorkspace(state, workspaceName)
+  saveWorkspace(workspaceName)
   state.popup.close()
 }
 
-const saveWorkspace = (state, workspaceName) =>
+const saveWorkspace = (workspaceName) =>
 {
   const list = state.todo.workspace.select.list
   list[randomUUID()] = workspaceName
@@ -26,7 +27,7 @@ const fetchActiveWorkspace = _ => localStorage.getItem('activeWorkspace') ?? nul
 
 const storeActiveWorkspace = val => { localStorage.setItem("activeWorkspace", val) }
 
-const getWorkspaceList = (val, state, active) =>
+const getWorkspaceList = (val, active) =>
   Object.entries({...{'':''}, ...val}).map(
     ([id, value]) => ({
       name: "option",
@@ -38,24 +39,22 @@ const getWorkspaceList = (val, state, active) =>
     })
   )
 
-const addWorkspaceForm = state =>
-  form("Add new workspace",
-    {
-      workspaceName: formRow("Workspace Name", { name: "input", props: { name: "workspacename" } }),
-      submit: { name: "input", props: { type: "submit" } }
-    },
-    {
-      listeners: {
-        submit: saveWorkspaceEvent(state)
-      }
+const addWorkspaceForm = _ => form("Add new workspace",
+  {
+    workspaceName: formRow("Workspace Name", { name: "input", props: { name: "workspacename" } }),
+    submit: { name: "input", props: { type: "submit" } }
+  },
+  {
+    listeners: {
+      submit: saveWorkspaceEvent
     }
-  )
+  }
+)
 
-const bindWorkspaceList = state =>
-({
+const bindWorkspaceList = {
   set: val => {
     storeWorkspaceList(val)
-    state.todo.workspace.select.children = getWorkspaceList(val, state)
+    state.todo.workspace.select.children = getWorkspaceList(val)
     state.todo.workspace.select.prepareNode(true)
   },
   get: _ => {
@@ -63,14 +62,14 @@ const bindWorkspaceList = state =>
     storeWorkspaceList(list)
     return list
   }
-})
+}
 
-const setActiveWorkspace = state => e => {
+const setActiveWorkspace = e => {
   state.todo.workspace.activeWorkspace = e.target.options[e.target.selectedIndex].value
   state.todo.project.activeProject = null
 }
 
-const workspace = state =>
+const workspace = _ =>
 ({
   children: {
     label: {
@@ -82,19 +81,19 @@ const workspace = state =>
     select: {
       name: "select",
       props: { id: "workspace-selector" },
-      children: getWorkspaceList(fetchWorkspaceList(), state, fetchActiveWorkspace()),
+      children: getWorkspaceList(fetchWorkspaceList(), fetchActiveWorkspace()),
       bindings: {
-        list: bindWorkspaceList(state)
+        list: bindWorkspaceList
       },
       listeners: {
-        change: setActiveWorkspace(state)
+        change: setActiveWorkspace
       }
     },
     button: {
       props: { innerText: "Add workspace" },
       listeners: {
         click: e => {
-          showPopup(addWorkspaceForm(state), state)
+          showPopup(addWorkspaceForm())
         }
       }
     }
