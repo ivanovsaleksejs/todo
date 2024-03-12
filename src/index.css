@@ -77,6 +77,9 @@ tasklegend info {
 tasklegend info:after {
   content: "\2139";
 }
+tasklegend.closed {
+  text-decoration: line-through
+}
 tasklegend tooltip {
   content: attr(title);
   position: absolute;

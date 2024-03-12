@@ -34,7 +34,6 @@ const saveTask = (taskName, project, description, todoList, code) =>
   const list = state.todo.tasks.list
   list[randomUUID()] = { name: taskName, project: project, description: description, todoList: todoList, code: code }
   state.todo.tasks.list = list
-  redrawBlocks()
 }
 
 const addTaskForm = _ => form("Add new task",
@@ -58,24 +57,18 @@ const addTaskForm = _ => form("Add new task",
 const bindTaskList = {
   set: val => {
     storeTaskList(val)
-    redrawBlocks(state)
+    redrawBlocks()
   },
-  get: _ => {
-    let list = fetchTaskList()
-    storeTaskList(list)
-    return list
-  }
+  get: fetchTaskList
 }
 
 const tasks = _ =>
 ({
-  bindings: {
-    list: bindTaskList
-  }
+  bindings: { list: bindTaskList }
 })
 
-const closeTask = id => {
-  const taskList = 1
+const closeTask = id => e => {
+  console.log(id, e.target.checked)
 }
 
 const taskView = (id, task) =>
@@ -87,7 +80,7 @@ const taskView = (id, task) =>
       done: formRow("Completed", {
         name: "input",
         props: { name: "done", type: "checkbox" },
-        listeners: { click: _ => closeTask(task) }
+        listeners: { click: closeTask(id) }
       })
     }
   }

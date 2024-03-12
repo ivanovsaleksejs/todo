@@ -1,4 +1,5 @@
 import { getProjectList, fetchProjectList } from './projects.js'
+import { redrawBlocks } from './todoblock.js'
 import { form, formRow } from './form.js'
 import { randomUUID }    from '../functions.js'
 import showPopup from './popup.js'
@@ -45,9 +46,7 @@ const addWorkspaceForm = _ => form("Add new workspace",
     submit: { name: "input", props: { type: "submit" } }
   },
   {
-    listeners: {
-      submit: saveWorkspaceEvent
-    }
+    listeners: { submit: saveWorkspaceEvent }
   }
 )
 
@@ -57,11 +56,7 @@ const bindWorkspaceList = {
     state.todo.workspace.select.children = getWorkspaceList(val)
     state.todo.workspace.select.prepareNode(true)
   },
-  get: _ => {
-    let list = fetchWorkspaceList()
-    storeWorkspaceList(list)
-    return list
-  }
+  get: fetchWorkspaceList
 }
 
 const setActiveWorkspace = e => {
@@ -79,7 +74,6 @@ const workspace = _ =>
       }
     },
     select: {
-      name: "select",
       props: { id: "workspace-selector" },
       children: getWorkspaceList(fetchWorkspaceList(), fetchActiveWorkspace()),
       bindings: {

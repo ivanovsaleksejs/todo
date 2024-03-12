@@ -12,7 +12,7 @@ const popup = content =>
     closebutton: {
       listeners: {
         click: e => {
-          state.popup.close()
+          e.target.component.parent.close()
         }
       }
     },

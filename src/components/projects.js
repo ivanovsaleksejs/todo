@@ -84,11 +84,7 @@ const bindProjectList = {
     state.todo.project.select.children = getProjectList(val, fetchActiveWorkspace())
     state.todo.project.select.prepareNode(true)
   },
-  get: _ => {
-    let list = fetchProjectList()
-    storeProjectList(list)
-    return list
-  }
+  get: fetchProjectList
 }
 
 const setActiveProject = e => state.todo.project.activeProject = e.target.options[e.target.selectedIndex].value
