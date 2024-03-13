@@ -1,4 +1,4 @@
-import { getWorkspaceList, fetchWorkspaceList, fetchActiveWorkspace } from './workspace.js'
+import { getWorkspaceList, fetchActiveWorkspace } from './workspace.js'
 import { redrawBlocks } from './todoblock.js'
 import { form, formRow } from './form.js'
 import { randomUUID } from '../functions.js'
@@ -68,7 +68,7 @@ const addProjectForm = _ => form("Add new project",
     projectWorkspace: formRow("Workspace", {
       name: "select",
       props: { name: "workspace" },
-      children: getWorkspaceList(fetchWorkspaceList(), fetchActiveWorkspace())
+      children: getWorkspaceList(state.todo.workspace.select.list, state.todo.workspace.activeWorkspace)
     }),
     submit: { name: "input", props: { type: "submit" } }
   },
@@ -82,7 +82,7 @@ const addProjectForm = _ => form("Add new project",
 const bindProjectList = {
   set: (val) => {
     storeProjectList(val)
-    state.todo.project.select.children = getProjectList(val, fetchActiveWorkspace())
+    state.todo.project.select.children = getProjectList(val, state.todo.activeWorkspace)
     state.todo.project.select.prepareNode(true)
   },
   get: fetchProjectList

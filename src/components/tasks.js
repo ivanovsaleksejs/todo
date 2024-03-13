@@ -13,7 +13,7 @@ const storeTaskList = list => saveData("tasks", list)
 
 const getTasksByProject = (project = null, list = null, workspace = null) =>
   Object
-    .entries(fetchTaskList())
+    .entries(state.todo.tasks.list)
     .filter(t =>
       (!project || t[1].project == project)
         &&
@@ -22,7 +22,7 @@ const getTasksByProject = (project = null, list = null, workspace = null) =>
       (!list || t[1].todoList == list)
     )
 
-const getTasksByList = list => Object.entries(fetchTaskList()).filter(t => t[1].todoList == list)
+const getTasksByList = list => Object.entries(state.todo.tasks.list).filter(t => t[1].todoList == list)
 
 const saveTaskEvent = e =>
 {

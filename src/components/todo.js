@@ -13,7 +13,10 @@ const todo = {
     tasks: tasks(),
     actions: actions(),
     todoblocks: {
-      children: {
+      preRender: {
+        getChildren: obj => obj.assignChildren(obj)
+      },
+      assignChildren: obj => obj.children = {
         backlog: todoBlock("Backlog", "backlog"),
         current: todoBlock("Current", "current", "todo-block current"),
         planned: todoBlock("Planned", "planned"),
