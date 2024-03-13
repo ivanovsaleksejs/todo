@@ -91,7 +91,7 @@ const taskView = (id, task) =>
       description: { props: { innerText: task.description } },
       done: formRow("Completed", {
         name: "input",
-        props: { name: "done", type: "checkbox" },
+        props: { name: "done", type: "checkbox", checked: task.closed },
         listeners: { click: closeTask(id) }
       })
     }
