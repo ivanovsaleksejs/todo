@@ -78,7 +78,9 @@ const tasks = _ =>
 })
 
 const closeTask = id => e => {
-  console.log(id, e.target.checked)
+  const tasks = state.todo.tasks.list
+  tasks[id].closed = e.target.checked
+  state.todo.tasks.list = tasks
 }
 
 const taskView = (id, task) =>
@@ -102,7 +104,8 @@ const taskLegend = ([id, task]) =>
   props: {
     style: { backgroundColor: getProject(task.project).color },
     innerText: task.code,
-    draggable: true
+    draggable: true,
+    className: task.closed ? "closed" : ""
   },
   children: {
     info: {},
