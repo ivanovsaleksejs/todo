@@ -10,7 +10,7 @@
   },
   "scripts": {
     "dev": "nodemon -e js,html,css",
-    "build": "ln -s $(pwd)/node_modules/element.js/element.js $(pwd)/src/element.js && yarn copy-files",
+    "build": "ln -sf $(pwd)/node_modules/element.js/element.js $(pwd)/src/element.js && yarn copy-files",
     "copy-files": "rsync -av --exclude='node_modules' src/ dist/"
   },
   "nodemonConfig": {
