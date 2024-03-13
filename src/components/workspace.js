@@ -2,6 +2,7 @@ import { getProjectList, fetchProjectList } from './projects.js'
 import { redrawBlocks } from './todoblock.js'
 import { form, formRow } from './form.js'
 import { randomUUID }    from '../functions.js'
+import { readData, saveData } from '../storage.js'
 import showPopup from './popup.js'
 import state     from '../state.js'
 
@@ -20,13 +21,13 @@ const saveWorkspace = (workspaceName) =>
   state.todo.workspace.select.list = list
 }
 
-const fetchWorkspaceList = _ => JSON.parse(localStorage.getItem("workspaces")) ?? {}
+const fetchWorkspaceList = _ => readData("workspaces", {})
 
-const storeWorkspaceList = list => { localStorage.setItem("workspaces", JSON.stringify(list)) }
+const storeWorkspaceList = list => saveData("workspaces", list)
 
-const fetchActiveWorkspace = _ => localStorage.getItem('activeWorkspace') ?? null
+const fetchActiveWorkspace = _ =>  readData("activeWorkspace", null)
 
-const storeActiveWorkspace = val => { localStorage.setItem("activeWorkspace", val) }
+const storeActiveWorkspace = val => saveData("activeWorkspace", val)
 
 const getWorkspaceList = (val, active) =>
   Object.entries({...{'':''}, ...val}).map(
@@ -61,7 +62,6 @@ const bindWorkspaceList = {
 
 const setActiveWorkspace = e => {
   state.todo.workspace.activeWorkspace = e.target.options[e.target.selectedIndex].value
-  state.todo.project.activeProject = null
 }
 
 const workspace = _ =>
@@ -96,8 +96,10 @@ const workspace = _ =>
     activeWorkspace: {
       set: val => {
         storeActiveWorkspace(val)
+        state.todo.project.activeProject = null
         state.todo.project.select.children = getProjectList(fetchProjectList(), val)
         state.todo.project.select.prepareNode(true)
+        redrawBlocks()
       },
       get: fetchActiveWorkspace
     }

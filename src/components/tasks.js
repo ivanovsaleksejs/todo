@@ -3,14 +3,24 @@ import { getProjectList, fetchProjectList, fetchActiveProject, getProject } from
 import { redrawBlocks } from './todoblock.js'
 import { form, formRow } from './form.js'
 import { randomUUID } from '../functions.js'
+import { readData, saveData } from '../storage.js'
 import showPopup from './popup.js'
 import state     from '../state.js'
 
-const fetchTaskList = _ => JSON.parse(localStorage.getItem("tasks")) ?? {}
+const fetchTaskList = _ => readData("tasks", {})
 
-const storeTaskList = list => { localStorage.setItem("tasks", JSON.stringify(list)) }
+const storeTaskList = list => saveData("tasks", list)
 
-const getTasksByProject = (project = null, list = null) => Object.entries(fetchTaskList()).filter(t => (!project || t[1].project == project) && (!list || t[1].todoList == list))
+const getTasksByProject = (project = null, list = null, workspace = null) =>
+  Object
+    .entries(fetchTaskList())
+    .filter(t =>
+      (!project || t[1].project == project)
+        &&
+      (!workspace || getProject(t[1].project).workspace == workspace)
+        &&
+      (!list || t[1].todoList == list)
+    )
 
 const getTasksByList = list => Object.entries(fetchTaskList()).filter(t => t[1].todoList == list)
 

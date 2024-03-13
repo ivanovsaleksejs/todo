@@ -2,18 +2,19 @@ import { getWorkspaceList, fetchWorkspaceList, fetchActiveWorkspace } from './wo
 import { redrawBlocks } from './todoblock.js'
 import { form, formRow } from './form.js'
 import { randomUUID } from '../functions.js'
+import { readData, saveData } from '../storage.js'
 import showPopup from './popup.js'
 import state     from '../state.js'
 
 const getProjectCode = name => name.slice(5).toUpperCase()
 
-const fetchProjectList = _ => JSON.parse(localStorage.getItem("projects")) ?? {}
+const fetchProjectList = _ => readData("projects", {})
 
-const storeProjectList = list => { localStorage.setItem("projects", JSON.stringify(list)) }
+const storeProjectList = list => saveData("projects", list)
 
-const fetchActiveProject = _ => localStorage.getItem('activeProject') ?? null
+const fetchActiveProject = _ => readData("activeProject", null)
 
-const storeActiveProject = val => { localStorage.setItem("activeProject", val) }
+const storeActiveProject = val => saveData("activeProject", val)
 
 const getProjectList = (val, workspace = null, active = null) =>
   Object
@@ -87,7 +88,7 @@ const bindProjectList = {
   get: fetchProjectList
 }
 
-const setActiveProject = e => state.todo.project.activeProject = e.target.options[e.target.selectedIndex].value
+const setActiveProject = e => state.todo.project.activeProject = e.target.options[e.target.selectedIndex].value ?? null
 
 const project = _ =>
 ({

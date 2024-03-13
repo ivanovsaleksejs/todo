@@ -5,6 +5,7 @@ import state from '../state.js'
 const redrawBlocks = _ =>
   Object.values(state.todo.todoblocks.children).map(b => {
     b.todoField.node.classList.remove("current")
+    b.todoField.assignChildren(b.todoField)
     b.todoField.prepareNode(true)
   })
 
@@ -36,9 +37,10 @@ const todoBlock = (blockName, type, className = "todo-block") =>
     todoField: {
       fieldType: type,
       preRender: {
-        getChildren: obj => {
-          obj.children = Object.assign({}, getTasksByProject(fetchActiveProject(), type).map(t => taskLegend(t)))
-        }
+        getChildren: obj => obj.assignChildren(obj)
+      },
+      assignChildren: obj => {
+        obj.children = Object.assign({}, getTasksByProject(state.todo.project.activeProject, type, state.todo.workspace.activeWorkspace).map(t => taskLegend(t)))
       },
       listeners: {
         dragover: e => {
