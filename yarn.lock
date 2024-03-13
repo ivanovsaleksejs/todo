@@ -69,7 +69,7 @@ debug@^4:
 
 element.js@ivanovsaleksejs/element.js:
   version "1.0.0"
-  resolved "https://codeload.github.com/ivanovsaleksejs/element.js/tar.gz/985e4eba75896ba065c3b44603ec54b6797b39a4"
+  resolved "https://codeload.github.com/ivanovsaleksejs/element.js/tar.gz/eda538cb348dde2d4ea2a36e16ba98d90a1a7314"
 
 fill-range@^7.0.1:
   version "7.0.1"
