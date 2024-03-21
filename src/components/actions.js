@@ -1,21 +1,18 @@
-import { addTaskForm } from './tasks.js'
-import { addProjectForm } from './projects.js'
-import showPopup from './popup.js'
+import { Element } from '../element.js'
+import Popup from './popup.js'
 import state     from '../state.js'
 
-const actions = _ =>
-({
-  children: {
+class Actions extends Element
+{
+  children = {
     addTask: {
       name: "button",
       props: { innerText: "Add task" },
       listeners: {
-        click: e => {
-          showPopup(addTaskForm())
-        }
+        click: e => new Popup(state.todo.children.tasks.addTaskForm())
       }
     },
   }
-})
+}
 
-export default actions
+export default Actions

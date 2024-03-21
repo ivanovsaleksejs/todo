@@ -49,7 +49,7 @@ popup closebutton {
 popup closebutton::after {
   content: "X";
 }
-popup fieldset {
+popup fieldset, popup content {
   display: flex;
   flex-direction: column;
 }
@@ -78,7 +78,8 @@ tasklegend info:after {
   content: "\2139";
 }
 tasklegend.closed {
-  text-decoration: line-through
+  text-decoration: line-through;
+  filter: opacity(0.4) grayscale(0.6);
 }
 tasklegend tooltip {
   content: attr(title);

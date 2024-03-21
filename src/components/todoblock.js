@@ -1,65 +1,76 @@
-import { getTasksByProject, taskLegend } from './tasks.js'
-import { fetchActiveProject } from './projects.js'
+import { Element }   from '../element.js'
 import state from '../state.js'
+import TaskLegend from './tasklegend.js'
 
-const redrawBlocks = _ =>
-  Object.values(state.todo.todoblocks.children).map(b => {
-    b.todoField.node.classList.remove("current")
-    b.todoField.assignChildren(b.todoField)
-    b.todoField.prepareNode(true)
-  })
+class TodoBlock extends Element
+{
+  name = "fieldset"
 
-const togglePreview = e => {
-  let node = e.target.component.parent.parent.node
-  e.target.checked ? node.classList.add("preview") : node.classList.remove("preview")
-}
-
-const todoBlock = (blockName, type, className = "todo-block") =>
-({
-  name: "fieldset",
-  props: { className: className },
-  children: {
-    legend: {
-      props: {
-        innerText: blockName
-      },
+  constructor(blockName, type, className = "todo-block")
+  {
+    super()
+    Object.assign(this, {
+      props: { className: className },
       children: {
-        preview: {
-          name: "input",
-          props: { id: `${type}-preview`, type: "checkbox" },
-          listeners: {
-            change: togglePreview
+        legend: {
+          props: {
+            innerText: blockName
+          },
+          children: {
+            preview: {
+              name: "input",
+              props: { id: `${type}-preview`, type: "checkbox" },
+              listeners: {
+                change: this.togglePreview
+              }
+            },
+            label: { props: { htmlFor: `${type}-preview`, innerText: "Toggle preview" } }
           }
         },
-        label: { props: { htmlFor: `${type}-preview`, innerText: "Toggle preview" } }
-      }
-    },
-    todoField: {
-      fieldType: type,
-      preRender: {
-        getChildren: obj => obj.assignChildren(obj)
-      },
-      assignChildren: obj => {
-        obj.children = Object.assign({}, getTasksByProject(state.todo.project.activeProject, type, state.todo.workspace.activeWorkspace).map(t => taskLegend(t)))
-      },
-      listeners: {
-        dragover: e => {
-          e.preventDefault()
-          Object.values(state.todo.todoblocks.children).map(b => {
-            b.todoField.node.classList.remove("current")
-          })
-          e.target.classList.add("current")
-        },
-        drop: e => {
-          state.todo.todoblocks.node.classList.remove('dragging')
-          const taskId = e.dataTransfer.getData("task")
-          const taskList = state.todo.tasks.list
-          taskList[taskId].todoList = type
-          state.todo.tasks.list = taskList
+        todoField: {
+          fieldType: type,
+          preRender: {
+            getChildren: obj => obj.assignChildren(obj)
+          },
+          assignChildren: obj => {
+            obj.children = Object.assign({}, state.todo.children.tasks.getTasksByProject(
+              state.todo.children.project.activeProject,
+              type,
+              state.todo.children.workspace.activeWorkspace
+            ).map(t => new TaskLegend(t)))
+          },
+          listeners: {
+            dragover: e => {
+              e.preventDefault()
+              Object.values(state.todo.children.todoblocks.children).map(b => {
+                b.children.todoField.node.classList.remove("current")
+              })
+              e.target.classList.add("current")
+            },
+            drop: e => {
+              state.todo.children.todoblocks.node.classList.remove('dragging')
+              const taskId = e.dataTransfer.getData("task")
+              const taskList = state.todo.children.tasks.list
+              taskList[taskId].todoList = type
+              state.todo.children.tasks.list = taskList
+            }
+          }
         }
       }
-    }
+    })
   }
-})
 
-export { todoBlock, redrawBlocks }
+  redraw()
+  {
+    let todoField = this.children.todoField
+    todoField.node.classList.remove("current")
+    todoField.assignChildren(todoField)
+    todoField.prepareNode(true)
+  }
+
+  togglePreview = e => {
+    e.target.checked ? this.node.classList.add("preview") : this.node.classList.remove("preview")
+  }
+}
+
+export default TodoBlock

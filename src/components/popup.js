@@ -1,32 +1,32 @@
-import element from '../element.js'
+import { Element } from '../element.js'
 import state   from '../state.js'
 
-const popup = content =>
-({
-  name: "popup",
-  close: _ => {
-    state.popup.node.remove()
-    delete state.popup
-  },
-  children: {
+class Popup extends Element
+{
+  children = {
     closebutton: {
       listeners: {
-        click: e => {
-          e.target.component.parent.close()
-        }
+        click: e => this.close()
       }
-    },
-    ...content
+    }
   }
-})
 
-const showPopup = (content) =>
-{
-  if (state.popup) {
-    state.popup.close()
+  constructor(content)
+  {
+    super()
+    if (state.popup) {
+      state.popup.close()
+    }
+    this.children = content instanceof Element ? {...this.children, content} : {...this.children, ...content}
+    state.popup = this
+    state.popup.appendTo(document.body)
   }
-  state.popup = element(popup(content))
-  state.popup.appendTo(document.body)
+
+  close()
+  {
+    this.node.remove()
+    delete state.popup
+  }
 }
 
-export default showPopup
+export default Popup

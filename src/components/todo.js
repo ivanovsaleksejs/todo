@@ -1,29 +1,19 @@
-import { todoBlock } from './todoblock.js'
-import { workspace } from './workspace.js'
-import { project }   from './projects.js'
-import { tasks }     from './tasks.js'
-import actions       from './actions.js'
-import state         from '../state.js'
+import { Element } from '../element.js'
+import TodoBlocks  from './todoblocks.js'
+import Workspace   from './workspace.js'
+import Project     from './projects.js'
+import Tasks       from './tasks.js'
+import Actions     from './actions.js'
 
-const todo = {
-  name: "todo",
-  children: {
-    workspace: workspace(),
-    project: project(),
-    tasks: tasks(),
-    actions: actions(),
-    todoblocks: {
-      preRender: {
-        getChildren: obj => obj.assignChildren(obj)
-      },
-      assignChildren: obj => obj.children = {
-        backlog: todoBlock("Backlog", "backlog"),
-        current: todoBlock("Current", "current", "todo-block current"),
-        planned: todoBlock("Planned", "planned"),
-      }
-    }
+class Todo extends Element
+{
+  children = {
+    tasks: new Tasks(),
+    workspace: new Workspace(),
+    project: new Project(),
+    actions: new Actions(),
+    todoblocks: new TodoBlocks()
   }
 }
 
-export default todo
-
+export default Todo
