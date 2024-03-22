@@ -5,31 +5,35 @@ import state     from '../state.js'
 
 class TaskLegend extends Element
 {
+  children = {
+    info: {},
+    tooltip: {}
+  }
+  listeners = {
+    click: e => new Popup(new TaskView(this.id, this.task)),
+    dragstart: e => {
+      state.todo.children.todoblocks.node.classList.add('dragging')
+      e.dataTransfer.setData("task", this.id)
+    }
+  }
+  bindings = {
+    task: {
+      get: _ => state.todo.children.tasks.getTaskById(this.id)
+    }
+  }
+
   constructor([id, task])
   {
     super()
 
-    Object.assign(this,
-      {
-        props: {
-          style: { backgroundColor: state.todo.children.project.getProject(task.project).color },
-          innerText: task.code,
-          draggable: true,
-          className: task.closed ? "closed" : ""
-        },
-        children: {
-          info: {},
-          tooltip: { props: { innerText: task.name } }
-        },
-        listeners: {
-          dragstart: e => {
-            state.todo.children.todoblocks.node.classList.add('dragging')
-            e.dataTransfer.setData("task", id)
-          },
-          click: e => new Popup(new TaskView(id, task))
-        }
-      }
-    )
+    this.id = id
+    this.props = {
+      style: { backgroundColor: task.color },
+      innerText: task.code,
+      draggable: true,
+      className: task.closed ? "closed" : ""
+    }
+    this.children.tooltip.props = { innerText: task.name }
   }
 }
 

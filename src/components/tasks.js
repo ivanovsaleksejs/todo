@@ -21,15 +21,18 @@ class Tasks extends Element
 
   storeTaskList = list => saveData("tasks", list)
 
-  getTasksByProject = (project = null, list = null, workspace = null) => Object.entries(this.list)
-    .filter(t =>
-      (!project || t[1].project == project)
-      &&
-      (!workspace || state.todo.children.project.getProject(t[1].project).workspace == workspace)
-      &&
-      (!list || t[1].todoList == list)
-    )
-    .sort((t1, t2) => (t1[1].closed ?? false) - (t2[1].closed ?? false))
+  getTaskById = id => this.list[id]
+
+  getTasksByProject = (project = null, list = null, workspace = null) => 
+    Object.entries(this.list)
+      .filter(t =>
+        (!project || t[1].project == project)
+        &&
+        (!workspace || state.todo.children.project.getProject(t[1].project).workspace == workspace)
+        &&
+        (!list || t[1].todoList == list)
+      )
+      .sort((t1, t2) => (t1[1].closed ?? false) - (t2[1].closed ?? false))
 
   addTaskForm = list => form("Add new task",
     {
