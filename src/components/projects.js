@@ -67,7 +67,6 @@ class Project extends Element
             index = 0
           }
           index += 1
-          console.log(index)
           this.activeProject = index == projectList.length ? null : projectList[index][1].id
         }
       }

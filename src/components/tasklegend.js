@@ -6,6 +6,7 @@ import state     from '../state.js'
 class TaskLegend extends Element
 {
   children = {
+    code: {},
     info: {},
     tooltip: {}
   }
@@ -27,9 +28,9 @@ class TaskLegend extends Element
     super()
 
     this.id = id
+    this.children.code.props = { innerText: task.code }
     this.props = {
       style: { backgroundColor: task.color },
-      innerText: task.code,
       draggable: true,
       className: task.closed ? "closed" : ""
     }

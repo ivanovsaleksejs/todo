@@ -264,6 +264,15 @@ tasklegend {
   position: relative;
   display: flex;
 }
+tasklegend code {
+  font-size: 1.2em;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+.preview tasklegend code {
+  min-width: 5em;
+}
 tasklegend info {
   width: 1em;
   height: 1em;
@@ -285,7 +294,7 @@ tasklegend.closed {
 tasklegend tooltip {
   content: attr(title);
   position: absolute;
-  top: -100%;
+  top: 100%;
   padding: 0.3vw 0.7vw;
   border-radius: 0.2vw;
   background: var(--main-light-solid);
