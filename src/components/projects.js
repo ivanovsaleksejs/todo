@@ -161,7 +161,7 @@ class Project extends Element
         props: {
           name: "projectcolor",
           type: "color",
-          value: "#" + (Math.random()*16777216 >>> 0).toString(16).padStart(6, '0')
+          value: "#" + [0,0,0].map(_=>(192*Math.random()|0).toString(16)).join('').padStart(6, '0')
         }
       }),
       projectWorkspace: formRow("Workspace", {

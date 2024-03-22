@@ -3,6 +3,7 @@
   --main-fade: rgb(37 91 126 / 50%);
   --main-light: rgb(218 229 243 / 50%);
   --main-light-solid: rgb(241 246 253);
+  --main-bg: rbg(255 255 255);
 }
 body {
   margin: 0;
@@ -30,6 +31,7 @@ button {
   font-weight: bold;
   cursor: pointer;
   font-size: 1.25em;
+  margin: 0 0.2em;
   padding: 0 0.3em;
 }
 button.add::after {
@@ -108,7 +110,7 @@ todo {
   transition: all .1s ease-in-out;
   width: 100%;
   min-height: 100vh;
-  background: var(--main-light-solid);
+  background: var(--main-bg);
   padding: 1vw;
   box-sizing: border-box;
 }
@@ -125,23 +127,22 @@ todoblocks {
   display: flex;
   border: 1px solid var(--main);
   border-radius: 0.3vw;
-  scrollbar-color: var(--main-light-solid) var(--main);
+  position: relative;
 }
 .todo-block legend {
   display: flex;
   align-items: center;
 }
-.todo-block .toggle-preview {
+.todo-block .toggle-preview, .todo-block .toggle-active {
   appearance: none;
   display: flex;
   margin: 0 0.2em;
   transition: all .1s ease-in-out;
 }
-.todo-block .toggle-preview:hover::after {
+.todo-block .toggle-preview:hover::after, .todo-block .toggle-active:hover::after {
   background-color: var(--main);
 }
-.todo-block .toggle-preview::after {
-  content: "\2630";
+.todo-block .toggle-preview::after, .todo-block .toggle-active::after {
   font-size: 1.5em;
   color: var(--main-light-solid);
   background-color: var(--main-fade);
@@ -149,7 +150,13 @@ todoblocks {
   padding: 0 0.3em;
   cursor: pointer;
 }
-.todo-block .toggle-preview:checked::after {
+.todo-block .toggle-preview::after {
+  content: "\2630";
+}
+.todo-block .toggle-active::after {
+  content: "\2714";
+}
+.todo-block .toggle-preview:checked::after, .todo-block .toggle-active:checked::after {
   background-color: var(--main);
 }
 .todo-block legend button {
@@ -168,6 +175,7 @@ todofield {
   flex-wrap: wrap;
   align-items: flex-start;
   overflow-y: auto;
+  scrollbar-color: var(--main-light-solid) var(--main);
 }
 todofield.current {
   background: #FFFFFF;
