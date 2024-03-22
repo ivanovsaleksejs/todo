@@ -11,12 +11,12 @@ class TodoBlock extends Element
   bindings = {
     filterActive: {
       set: val => saveData(`filters.${this.blockName}.active`, val),
-        get: _   => readData(`filters.${this.blockName}.active`)
+      get: _   => readData(`filters.${this.blockName}.active`)
     },
-      preview: {
-        set: val => saveData(`options.${this.blockName}.preview`, val),
-          get: _   => readData(`options.${this.blockName}.preview`)
-      }
+    preview: {
+      set: val => saveData(`options.${this.blockName}.preview`, val),
+      get: _   => readData(`options.${this.blockName}.preview`)
+    }
   }
 
   postRender = {
@@ -115,7 +115,7 @@ class TodoBlock extends Element
     this.children.legend.children.preview.listeners = { click: this.togglePreview }
   }
 
-  redraw()
+  redraw = _ =>
   {
     let todoField = this.children.todoField
     todoField.node.classList.remove("current")

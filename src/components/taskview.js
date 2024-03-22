@@ -21,7 +21,8 @@ class TaskView extends Element
     }
   }
 
-  closeTask(id, checked) {
+  closeTask = (id, checked) =>
+  {
     const tasks = state.todo.children.tasks.list
     tasks[id].closed = checked
     state.todo.children.tasks.list = tasks

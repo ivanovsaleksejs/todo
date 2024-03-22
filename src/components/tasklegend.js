@@ -10,6 +10,7 @@ class TaskLegend extends Element
     info: {},
     tooltip: {}
   }
+
   listeners = {
     click: e => new Popup(new TaskView(this.id, this.task)),
     dragstart: e => {
@@ -17,6 +18,7 @@ class TaskLegend extends Element
       e.dataTransfer.setData("task", this.id)
     }
   }
+
   bindings = {
     task: {
       get: _ => state.todo.children.tasks.getTaskById(this.id)

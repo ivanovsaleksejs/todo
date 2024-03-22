@@ -65,6 +65,7 @@ class Workspace extends Element
       }
     }
   }
+
   bindings = {
     activeWorkspace: {
       set: val => {

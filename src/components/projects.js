@@ -72,6 +72,7 @@ class Project extends Element
       }
     }
   }
+
   bindings = {
     activeProject: {
       set: val => {
@@ -152,35 +153,36 @@ class Project extends Element
     select.list = list
   }
 
-  addProjectForm = _ => form("Add new project",
-    {
-      projectName: formRow("Project name", { name: "input", props: { name: "projectname" } }),
-      projectColor: formRow("Project color", {
-        name: "input",
-        props: {
-          name: "projectcolor",
-          type: "color",
-          value: "#" + [0,0,0].map(_=>(192*Math.random()|0).toString(16)).join('').padStart(6, '0')
-        }
-      }),
-      projectWorkspace: formRow("Workspace", {
-        name: "select",
-        props: { name: "workspace" },
-        preRender: {
-          getChildren: obj => {
-            const workspace = state.todo.children.workspace
-            obj.children = workspace.getWorkspaceOptions(workspace.children.selector.list, workspace.activeWorkspace)
+  addProjectForm = _ =>
+    form("Add new project",
+      {
+        projectName: formRow("Project name", { name: "input", props: { name: "projectname" } }),
+        projectColor: formRow("Project color", {
+          name: "input",
+          props: {
+            name: "projectcolor",
+            type: "color",
+            value: "#" + [0,0,0].map(_=>(192*Math.random()|0).toString(16)).join('').padStart(6, '0')
           }
+        }),
+        projectWorkspace: formRow("Workspace", {
+          name: "select",
+          props: { name: "workspace" },
+          preRender: {
+            getChildren: obj => {
+              const workspace = state.todo.children.workspace
+              obj.children = workspace.getWorkspaceOptions(workspace.children.selector.list, workspace.activeWorkspace)
+            }
+          }
+        }),
+        submit: { name: "input", props: { type: "submit" } }
+      },
+      {
+        listeners: {
+          submit: this.saveProjectEvent
         }
-      }),
-      submit: { name: "input", props: { type: "submit" } }
-    },
-    {
-      listeners: {
-        submit: this.saveProjectEvent
       }
-    }
-  )
+    )
 }
 
 export default Project

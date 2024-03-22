@@ -7,7 +7,7 @@ class TodoBlocks extends Element
     getChildren: _ => this.assignChildren()
   }
 
-  assignChildren()
+  assignChildren = _ =>
   {
     this.children = {
       backlog: new TodoBlock("Backlog", "backlog"),
@@ -16,10 +16,7 @@ class TodoBlocks extends Element
     }
   }
 
-  redraw()
-  {
-    Object.values(this.children).map(b => b.redraw())
-  }
+  redraw = _ => Object.values(this.children).map(b => b.redraw())
 }
 
 export default TodoBlocks

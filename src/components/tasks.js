@@ -23,7 +23,7 @@ class Tasks extends Element
 
   getTaskById = id => this.list[id]
 
-  getTasksByProject = (project = null, list = null, workspace = null) => 
+  getTasksByProject = (project = null, list = null, workspace = null) =>
     Object.entries(this.list)
       .filter(t =>
         (!project || t[1].project == project)
@@ -34,33 +34,34 @@ class Tasks extends Element
       )
       .sort((t1, t2) => (t1[1].closed ?? false) - (t2[1].closed ?? false))
 
-  addTaskForm = list => form("Add new task",
-    {
-      taskName: formRow("Task name", { name: "input", props: { name: "taskname" } }),
-      taskProject: formRow("Project", {
-        name: "select",
-        props: { name: "project" },
-        preRender: {
-          getChildren: obj => {
-            const project = state.todo.children.project
-            const workspace = state.todo.children.workspace
-            obj.children = project.getProjectOptions(project.fetchProjectList(), workspace.fetchActiveWorkspace(), project.fetchActiveProject())
+  addTaskForm = list => 
+    form("Add new task",
+      {
+        taskName: formRow("Task name", { name: "input", props: { name: "taskname" } }),
+        taskProject: formRow("Project", {
+          name: "select",
+          props: { name: "project" },
+          preRender: {
+            getChildren: obj => {
+              const project = state.todo.children.project
+              const workspace = state.todo.children.workspace
+              obj.children = project.getProjectOptions(project.fetchProjectList(), workspace.fetchActiveWorkspace(), project.fetchActiveProject())
+            }
           }
-        }
-      }),
-      taskDescription: formRow("Description", { name: "textarea", props: { name: "taskdescription" } }),
-      taskList: {
-        name: "input",
-        props: { name: "list", type: "hidden", value: list }
+        }),
+        taskDescription: formRow("Description", { name: "textarea", props: { name: "taskdescription" } }),
+        taskList: {
+          name: "input",
+          props: { name: "list", type: "hidden", value: list }
+        },
+        submit: { name: "input", props: { type: "submit" } }
       },
-      submit: { name: "input", props: { type: "submit" } }
-    },
-    {
-      listeners: {
-        submit: this.saveTaskEvent
+      {
+        listeners: {
+          submit: this.saveTaskEvent
+        }
       }
-    }
-  )
+    )
 
   saveTaskEvent = e =>
   {

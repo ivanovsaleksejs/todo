@@ -10,6 +10,7 @@ class Popup extends Element
       }
     }
   }
+
   listeners = {
     rendered: e => setTimeout(e => this.node.classList.add('opened'), 5),
     transitionend: e => {
@@ -33,7 +34,7 @@ class Popup extends Element
     state.popup.appendTo(document.body)
   }
 
-  close()
+  close = _ =>
   {
     this.node.classList.remove('opened')
     delete state.popup
