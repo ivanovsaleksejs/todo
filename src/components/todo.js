@@ -3,7 +3,7 @@ import TodoBlocks  from './todoblocks.js'
 import Workspace   from './workspace.js'
 import Project     from './projects.js'
 import Tasks       from './tasks.js'
-import Actions     from './actions.js'
+import state       from '../state.js'
 
 class Todo extends Element
 {
@@ -11,8 +11,15 @@ class Todo extends Element
     tasks: new Tasks(),
     workspace: new Workspace(),
     project: new Project(),
-    actions: new Actions(),
     todoblocks: new TodoBlocks()
+  }
+
+  listeners = {
+    click: e => {
+      if (state.popup?.opened) {
+        state.popup.close()
+      }
+    }
   }
 }
 

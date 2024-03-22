@@ -1,6 +1,7 @@
 import { Element }   from '../element.js'
-import state from '../state.js'
 import TaskLegend from './tasklegend.js'
+import Popup from './popup.js'
+import state from '../state.js'
 
 class TodoBlock extends Element
 {
@@ -19,12 +20,21 @@ class TodoBlock extends Element
           children: {
             preview: {
               name: "input",
-              props: { id: `${type}-preview`, type: "checkbox" },
+              props: {
+                type: "checkbox",
+                className: "toggle-preview"
+              },
               listeners: {
                 change: this.togglePreview
               }
             },
-            label: { props: { htmlFor: `${type}-preview`, innerText: "Toggle preview" } }
+            addTask: {
+              name: "button",
+              props: { className: "add" },
+              listeners: {
+                click: e => new Popup(state.todo.children.tasks.addTaskForm(type))
+              }
+            }
           }
         },
         todoField: {

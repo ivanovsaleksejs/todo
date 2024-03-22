@@ -8,36 +8,59 @@ import state from '../state.js'
 class Workspace extends Element
 {
   children = {
-    label: {
+    span: {
       props: {
-        htmlFor: "workspace-selector",
         innerText: "Workspace"
+      },
+      children: {
+        button: {
+          props: { className: "add" },
+          listeners: {
+            click: e => {
+              new Popup(this.addWorkspaceForm())
+            }
+          }
+        }
       }
     },
-    select: {
-      props: { id: "workspace-selector" },
+    selector: {
       bindings: {
         list: {
           set: val => {
             this.storeWorkspaceList(val)
-            this.children.select.children = this.getWorkspaceList(val)
-            this.children.select.prepareNode(true)
+            this.children.selector.children = this.getWorkspaceList(val)
+            this.children.selector.prepareNode(true)
           },
           get: _ => this.fetchWorkspaceList()
         }
       },
-      listeners: {
-        change: e => this.activeWorkspace = e.target.options[e.target.selectedIndex].value
-      },
       preRender: {
-        getChildren: _ => this.children.select.children = this.getWorkspaceList(this.fetchWorkspaceList(), this.fetchActiveWorkspace())
+        getChildren: _ => this.children.selector.children = this.getWorkspaceList(this.fetchWorkspaceList(), this.fetchActiveWorkspace())
       }
     },
-    button: {
-      props: { innerText: "Add workspace" },
+    prev: {
       listeners: {
         click: e => {
-          new Popup(this.addWorkspaceForm())
+          const workspaceList = Object.entries(this.fetchWorkspaceList())
+          let index = workspaceList.findIndex(([id, val]) => id == this.activeWorkspace)
+          if (index < 0) {
+            index = workspaceList.length
+          }
+          index -= 1
+          this.activeWorkspace = index < 0 ? null : workspaceList[index][0]
+        }
+      }
+    },
+    next: {
+      listeners: {
+        click: e => {
+          const workspaceList = Object.entries(this.fetchWorkspaceList())
+          let index = workspaceList.findIndex(([id, val]) => id == this.activeWorkspace)
+          if (index > workspaceList.length) {
+            index = 0
+          }
+          index += 1
+          this.activeWorkspace = index == workspaceList.length ? null : workspaceList[index][0]
         }
       }
     }
@@ -46,10 +69,13 @@ class Workspace extends Element
     activeWorkspace: {
       set: val => {
         this.storeActiveWorkspace(val)
+        const workspaceList = Object.values(this.children.selector.children)
+        workspaceList.forEach(item => item.node.dataset.selected = false)
+        workspaceList.find(item => item.id == (val ?? 'all')).node.dataset.selected = true
         const project = state.todo.children.project
         project.activeProject = null
-        project.children.select.children = project.getProjectList(project.fetchProjectList(), val)
-        project.children.select.prepareNode(true)
+        project.children.selector.children = project.getProjectList(project.fetchProjectList(), val)
+        project.children.selector.prepareNode(true)
         state.todo.children.todoblocks.redraw()
       },
       get: _ => this.fetchActiveWorkspace()
@@ -77,9 +103,9 @@ class Workspace extends Element
 
   saveWorkspace = workspaceName =>
   {
-    const list = this.children.select.list
+    const list = this.children.selector.list
     list[randomUUID()] = workspaceName
-    this.children.select.list = list
+    this.children.selector.list = list
   }
 
   fetchWorkspaceList = _ => readData("workspaces", {})
@@ -91,6 +117,22 @@ class Workspace extends Element
   storeActiveWorkspace = val => saveData("activeWorkspace", val)
 
   getWorkspaceList = (val, active) =>
+    Object
+      .entries({...{'all':'All'}, ...val})
+      .map(([id, value]) =>
+        ({
+          name: "item",
+          id: id,
+          props: {
+            innerText: value,
+          },
+          data: {
+            selected: active ? active == id : id == 'all'
+          }
+        })
+      )
+
+  getWorkspaceOptions = (val, active) =>
     Object.entries({...{'':''}, ...val}).map(
       ([id, value]) => ({
         name: "option",

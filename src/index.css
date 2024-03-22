@@ -1,6 +1,116 @@
+:root {
+  --main: rgb(37 91 126);
+  --main-fade: rgb(37 91 126 / 50%);
+  --main-light: rgb(218 229 243 / 50%);
+  --main-light-solid: rgb(241 246 253);
+}
+body {
+  margin: 0;
+  color: var(--main);
+}
+workspace, project {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid var(--main);
+  border-radius: 0.3vw;
+  position: relative;
+  background: var(--main);
+  color: var(--main-light);
+  margin-bottom: 1vh;
+}
+workspace span, project span {
+  padding: 1vh;
+}
+button {
+  border: 0 none;
+  background: transparent;
+  color: var(--main-light-solid);
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1.25em;
+  padding: 0 0.3em;
+}
+button.add::after {
+  content: "\271A";
+}
+selector {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+selector::after {
+  content: "\200B";
+  display: block;
+  clear: both;
+  margin: 1.5vh;
+}
+selector item {
+  transition: all .3s ease-in-out;
+  position: absolute;
+  filter: blur(1px) opacity(0.5);
+  background-color: var(--main-light-solid);
+  color: var(--main);
+  padding: 0.5vh 4vw;
+  font-size: 1.2em;
+  border-radius: 0.3vw;
+  margin: 0.1vh 0;
+}
+selector item[data-selected=true] {
+  left: 50%;
+  transform: translate(-50%, 0);
+  filter: none;
+}
+selector item[data-selected=false]:has(~ item[data-selected=true]) {
+  left: -100%;
+}
+selector item[data-selected=false]:has(+ item[data-selected=true]) {
+  left: 20%;
+}
+selector item[data-selected=true] ~ item[data-selected=false] {
+  left: 200%;
+}
+selector item[data-selected=true] + item[data-selected=false] {
+  left: 80%;
+  transform: translate(-100%, 0);
+}
+prev, next {
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  position: absolute;
+  font-size: 2em;
+  justify-content: center;
+  display: flex;
+  font-weight: bold;
+  cursor: pointer;
+  background: var(--main);
+  color: var(--main-light-solid);
+  align-items: center;
+}
+prev {
+  left: 0;
+}
+prev::after {
+  content: "\2329";
+}
+next {
+  right: 0;
+}
+next::after {
+  content: "\232A";
+}
 todo {
   display: flex;
   flex-direction: column;
+  transition: all .1s ease-in-out;
+  width: 100%;
+  min-height: 100vh;
+  background: var(--main-light-solid);
+  padding: 1vw;
+  box-sizing: border-box;
 }
 todoblocks.dragging {
   background: #AAAAAA;
@@ -13,7 +123,42 @@ todoblocks {
   width: 30vw;
   height: 20vw;
   display: flex;
-  border: 1px solid #000000;
+  border: 1px solid var(--main);
+  border-radius: 0.3vw;
+  scrollbar-color: var(--main-light-solid) var(--main);
+}
+.todo-block legend {
+  display: flex;
+  align-items: center;
+}
+.todo-block .toggle-preview {
+  appearance: none;
+  display: flex;
+  margin: 0 0.2em;
+  transition: all .1s ease-in-out;
+}
+.todo-block .toggle-preview:hover::after {
+  background-color: var(--main);
+}
+.todo-block .toggle-preview::after {
+  content: "\2630";
+  font-size: 1.5em;
+  color: var(--main-light-solid);
+  background-color: var(--main-fade);
+  font-weight: bold;
+  padding: 0 0.3em;
+  cursor: pointer;
+}
+.todo-block .toggle-preview:checked::after {
+  background-color: var(--main);
+}
+.todo-block legend button {
+  color: var(--main-light-solid);
+  background-color: var(--main-fade);
+  transition: all .1s ease-in-out;
+}
+.todo-block legend button:hover {
+  background-color: var(--main);
 }
 todofield {
   align-content: flex-start;
@@ -22,6 +167,7 @@ todofield {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
+  overflow-y: auto;
 }
 todofield.current {
   background: #FFFFFF;
@@ -30,28 +176,75 @@ popup {
   position: absolute;
   top: 10vw;
   left: 50%;
-  transform: translate(-50%, 0);
-  padding: 1vw;
-  border: 1px solid #000000;
+  transform: translate(-50%, 0) scale(0);
+  padding: 2vw;
+  border: 1px solid var(--main);
   border-radius: 0.3vw;
-  background: #FFFFFF;
+  background: var(--main-light-solid);
   z-index: 1;
+  transition: all .1s ease-in-out;
+}
+popup.opened {
+  transform: translate(-50%, 0) scale(1);
 }
 popup closebutton {
   position: absolute;
-  right: 0;
+  right: 0.5vw;
   width: 0.8em;
   height: 0.8em;
   cursor: pointer;
-  top: 0;
-  font-size: 0.8em;
+  top: 0.5vw;
+  font-size: 1.2em;
+  color: var(--main);
+}
+popup closebutton:hover {
+  text-shadow: 0 0 0.1em var(--main);
 }
 popup closebutton::after {
-  content: "X";
+  content: "\2715";
 }
 popup fieldset, popup content {
   display: flex;
   flex-direction: column;
+}
+popup content {
+  min-width: 100%;
+}
+body:has(popup) {
+  content: "";
+  background-color: var(--main-fade);
+}
+body:has(popup) todo {
+  filter: blur(1px) brightness(0.8) grayscale(0.8) opacity(0.7);
+}
+popup:has(form) {
+  width: 50%;
+}
+popup fieldset {
+  border: 1px solid var(--main);
+  border-radius: 0.3vw;
+}
+popup fieldset > *:has(label) {
+  width: 100%;
+  display: flex;
+  margin: 0.4vh 0;
+  justify-content: space-between;
+}
+popup:has(content) {
+  width: 90%;
+  min-height: 40vh;
+  display: flex;
+}
+popup content taskname {
+  font-weight: bold;
+  margin-bottom: 1vh;
+}
+popup content description {
+  border: 1px solid var(--main);
+  border-radius: 0.1vw;
+  padding: 1vh 1vw;
+  margin: 1vh 0;
+  flex-grow: 1;
 }
 tasklegend {
   margin: 0.2vw;
@@ -79,7 +272,7 @@ tasklegend info:after {
 }
 tasklegend.closed {
   text-decoration: line-through;
-  filter: opacity(0.4) grayscale(0.6);
+  filter: grayscale(0.6) opacity(0.4);
 }
 tasklegend tooltip {
   content: attr(title);
@@ -87,19 +280,23 @@ tasklegend tooltip {
   top: -100%;
   padding: 0.3vw 0.7vw;
   border-radius: 0.2vw;
-  background: #FFFFFF;
+  background: var(--main-light-solid);
   color: #000000;
   text-shadow: none;
-  border: 1px solid #000000;
+  box-shadow: 1px 1px 1px var(--main);
+  border: 1px solid var(--main);
   white-space: nowrap;
-  z-index: 1;
   opacity: 0;
   transition: all .05s ease-in-out;
   transform: scale(0);
 }
+tasklegend:hover {
+  filter: none;
+}
 tasklegend info:hover ~ tooltip {
   transform: scale(1);
   opacity: 1;
+  z-index: 2;
 }
 tasklegend:active tooltip {
   transform: scale(0);

@@ -8,21 +8,26 @@ import state from '../state.js'
 class Project extends Element
 {
   children = {
-    label: {
+    span: {
       props: {
-        htmlFor: "project-selector",
         innerText: "Project"
+      },
+      children: {
+        button: {
+          props: { className: "add" },
+          listeners: {
+            click: e => new Popup(this.addProjectForm())
+          }
+        }
       }
     },
-    select: {
-      name: "select",
-      props: { id: "project-selector" },
+    selector: {
       bindings: {
         list: {
           set: val => {
             this.storeProjectList(val)
-            this.children.select.children = this.getProjectList(val, state.todo.activeWorkspace)
-            this.children.select.prepareNode(true)
+            this.children.selector.children = this.getProjectList(val, state.todo.activeWorkspace)
+            this.children.selector.prepareNode(true)
           },
           get: _ => this.fetchProjectList()
         }
@@ -32,18 +37,39 @@ class Project extends Element
       },
       preRender: {
         getChildren: _ => {
-          this.children.select.children = this.getProjectList(
+          this.children.selector.children = this.getProjectList(
             this.fetchProjectList(),
-            state.todo.children.workspace.fetchActiveWorkspace(),
+            state.todo.children.workspace.activeWorkspace,
             this.fetchActiveProject()
           )
         }
       }
     },
-    button: {
-      props: { innerText: "Add project" },
+    prev: {
       listeners: {
-        click: e => new Popup(this.addProjectForm())
+        click: e => {
+          const projectList = Object.entries(this.getProjectList(this.fetchProjectList(), state.todo.children.workspace.activeWorkspace, this.activeProject))
+          let index = projectList.findIndex(([id, val]) => val.id == this.activeProject)
+          if (index < 0) {
+            index = projectList.length
+          }
+          index -= 1
+          this.activeProject = index <= 0 ? null : projectList[index][1].id
+        }
+      }
+    },
+    next: {
+      listeners: {
+        click: e => {
+          const projectList = Object.entries(this.getProjectList(this.fetchProjectList(), state.todo.children.workspace.activeWorkspace, this.activeProject))
+          let index = projectList.findIndex(([id, val]) => val.id == this.activeProject)
+          if (index > projectList.length || index < 0) {
+            index = 0
+          }
+          index += 1
+          console.log(index)
+          this.activeProject = index == projectList.length ? null : projectList[index][1].id
+        }
       }
     }
   }
@@ -51,6 +77,9 @@ class Project extends Element
     activeProject: {
       set: val => {
         this.storeActiveProject(val)
+        const projectList = Object.values(this.children.selector.children)
+        projectList.forEach(item => item.node.dataset.selected = false)
+        projectList.find(item => item.id == (val ?? 'all')).node.dataset.selected = true
         state.todo.children.todoblocks.redraw()
       },
       get: _ => this.fetchActiveProject()
@@ -70,6 +99,23 @@ class Project extends Element
   getProject = id => this.fetchProjectList()[id]
 
   getProjectList = (val, workspace = null, active = null) =>
+    Object
+      .entries({...{'all':{name: 'All'}}, ...val})
+      .filter(p => p[0] == 'all' || !workspace || workspace == p[1].workspace)
+      .map(([id, value]) =>
+        ({
+          name: "item",
+          id: id,
+          props: {
+            innerText: value.name
+          },
+          data: {
+            selected: active ? active == id : id == 'all'
+          }
+        })
+      )
+
+  getProjectOptions = (val, workspace = null, active = null) =>
     Object
       .entries({...{'':{name: ''}}, ...val})
       .filter(p => !p[0] || !workspace || workspace == p[1].workspace)
@@ -101,7 +147,7 @@ class Project extends Element
 
   saveProject = (projectName, projectColor, workspace, code) =>
   {
-    const select = state.todo.children.project.children.select
+    const select = state.todo.children.project.children.selector
     const list = select.list
     list[randomUUID()] = { name: projectName, color: projectColor, workspace: workspace, code: code }
     select.list = list
@@ -124,7 +170,7 @@ class Project extends Element
         preRender: {
           getChildren: obj => {
             const workspace = state.todo.children.workspace
-            obj.children = workspace.getWorkspaceList(workspace.children.select.list, workspace.activeWorkspace)
+            obj.children = workspace.getWorkspaceOptions(workspace.children.selector.list, workspace.activeWorkspace)
           }
         }
       }),

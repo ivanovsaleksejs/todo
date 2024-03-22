@@ -31,7 +31,7 @@ class Tasks extends Element
     )
     .sort((t1, t2) => (t1[1].closed ?? false) - (t2[1].closed ?? false))
 
-  addTaskForm = _ => form("Add new task",
+  addTaskForm = list => form("Add new task",
     {
       taskName: formRow("Task name", { name: "input", props: { name: "taskname" } }),
       taskProject: formRow("Project", {
@@ -41,11 +41,15 @@ class Tasks extends Element
           getChildren: obj => {
             const project = state.todo.children.project
             const workspace = state.todo.children.workspace
-            obj.children = project.getProjectList(project.fetchProjectList(), workspace.fetchActiveWorkspace(), project.fetchActiveProject())
+            obj.children = project.getProjectOptions(project.fetchProjectList(), workspace.fetchActiveWorkspace(), project.fetchActiveProject())
           }
         }
       }),
       taskDescription: formRow("Description", { name: "textarea", props: { name: "taskdescription" } }),
+      taskList: {
+        name: "input",
+        props: { name: "list", type: "hidden", value: list }
+      },
       submit: { name: "input", props: { type: "submit" } }
     },
     {
@@ -63,7 +67,7 @@ class Tasks extends Element
     const projectId = formdata.get("project")
     const project = state.todo.children.project.getProject(projectId)
     const description = formdata.get("taskdescription")
-    const todoList = "planned"
+    const todoList = formdata.get("list")
     const projectTasks = this.getTasksByProject(projectId)
     const code = `${project.code}-${projectTasks.length ? (Math.max(...(projectTasks.map(t => +t[1].code.split('-')[1])))+1) : 1}`
     this.saveTask(taskName, projectId, description, todoList, code)

@@ -10,6 +10,17 @@ class Popup extends Element
       }
     }
   }
+  listeners = {
+    rendered: e => setTimeout(e => this.node.classList.add('opened'), 5),
+    transitionend: e => {
+      if (!this.node.classList.contains('opened')) {
+        this.node.remove()
+      }
+      else {
+        this.opened = true
+      }
+    }
+  }
 
   constructor(content)
   {
@@ -24,7 +35,7 @@ class Popup extends Element
 
   close()
   {
-    this.node.remove()
+    this.node.classList.remove('opened')
     delete state.popup
   }
 }
