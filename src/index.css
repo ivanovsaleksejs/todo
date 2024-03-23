@@ -1,5 +1,6 @@
 :root {
   --main: rgb(37 91 126);
+  --active: rgb(243 192 46);
   --main-fade: rgb(37 91 126 / 50%);
   --main-light: rgb(218 229 243 / 50%);
   --main-light-solid: rgb(241 246 253);
@@ -137,10 +138,6 @@ todoblocks {
   appearance: none;
   display: flex;
   margin: 0 0.2em;
-  transition: all .1s ease-in-out;
-}
-.todo-block .toggle-preview:hover::after, .todo-block .toggle-active:hover::after {
-  background-color: var(--main);
 }
 .todo-block .toggle-preview::after, .todo-block .toggle-active::after {
   font-size: 1.5em;
@@ -149,6 +146,7 @@ todoblocks {
   font-weight: bold;
   padding: 0 0.3em;
   cursor: pointer;
+  transition: all .2s ease-in-out;
 }
 .todo-block .toggle-preview::after {
   content: "\2630";
@@ -158,6 +156,9 @@ todoblocks {
 }
 .todo-block .toggle-preview:checked::after, .todo-block .toggle-active:checked::after {
   background-color: var(--main);
+}
+.todo-block .toggle-preview:hover::after, .todo-block .toggle-active:hover::after {
+  background-color: var(--active);
 }
 .todo-block legend button {
   color: var(--main-light-solid);
