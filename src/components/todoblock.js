@@ -122,12 +122,14 @@ class TodoBlock extends Element
     todoField.prepareNode(true)
   }
 
-  togglePreview = e => {
+  togglePreview = e =>
+  {
     this.preview = e.target.checked
     e.target.checked ? this.node.classList.add("preview") : this.node.classList.remove("preview")
   }
 
-  toggleActive = e => {
+  toggleActive = e =>
+  {
     this.filterActive = e.target.checked
     this.redraw()
   }
