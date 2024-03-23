@@ -25,7 +25,7 @@ workspace, project {
 workspace span, project span {
   padding: 1vh;
 }
-button {
+button, export {
   border: 0 none;
   background: transparent;
   color: var(--main-light-solid);
@@ -37,6 +37,9 @@ button {
 }
 button.add::after {
   content: "\271A";
+}
+export::after {
+  content: "\2913";
 }
 selector {
   width: 100%;
@@ -233,11 +236,54 @@ popup fieldset {
   border: 1px solid var(--main);
   border-radius: 0.3vw;
 }
+popup fieldset label {
+  font-size: 1.2em;
+}
+popup input[type="submit"] {
+  max-width: 20%;
+  border: 1px solid var(--main);
+  border-radius: 0.3vw;
+  padding: 0.5vh 0.8vw;
+  background-color: var(--main-light);
+  color: var(--main);
+  font-size: 1.2em;
+  cursor: pointer;
+}
+popup input[type="submit"]:hover {
+  background-color: var(--main-fade);
+}
 popup fieldset > *:has(label) {
   width: 100%;
   display: flex;
-  margin: 0.4vh 0;
+  margin: 1.1vh 0;
   justify-content: space-between;
+}
+popup fieldset > *:has(label) *:nth-child(2) {
+  border: 1px solid var(--main);
+  border-radius: 0.3vw;
+  padding: 0.5vh 0.3vw;
+  background-color: var(--main-light);
+  color: var(--main);
+  font-size: 1.1em;
+}
+popup fieldset > *:has(label) *:nth-child(2):focus {
+  outline: 0.2vw solid var(--main-fade);
+}
+popup fieldset > *:has(label) input,
+popup fieldset > *:has(label) textarea {
+  min-width: 50%;
+  box-sizing: border-box;
+}
+popup fieldset > *:has(label) input[type=color],
+popup fieldset > *:has(label) select {
+  min-width: auto;
+}
+popup fieldset > *:has(label) input[type=color] {
+  padding: 0;
+  border: 0;
+}
+popup fieldset > *:has(label) textarea {
+  min-height: 9em;
 }
 popup:has(content) {
   width: 90%;
@@ -260,7 +306,7 @@ tasklegend {
   padding: 0.7vh 0.5vw;
   border-radius: 0.2vw;
   color: #FFFFFF;
-  text-shadow: 0 0 3px #000000;
+  text-shadow: 0 0 0.2vw var(--main);
   cursor: pointer;
   position: relative;
   display: flex;

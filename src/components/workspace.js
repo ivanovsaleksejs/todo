@@ -1,7 +1,7 @@
 import { Element }   from '../element.js'
 import { form, formRow } from './form.js'
 import { randomUUID }    from '../functions.js'
-import { readData, saveData } from '../storage.js'
+import { readData, saveData, exportData } from '../storage.js'
 import Popup from './popup.js'
 import state from '../state.js'
 
@@ -16,9 +16,12 @@ class Workspace extends Element
         button: {
           props: { className: "add" },
           listeners: {
-            click: e => {
-              new Popup(this.addWorkspaceForm())
-            }
+            click: e => new Popup(this.addWorkspaceForm())
+          }
+        },
+        export: {
+          listeners: {
+            click: exportData
           }
         }
       }
