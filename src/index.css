@@ -316,9 +316,15 @@ tasklegend code {
   font-weight: bold;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 .preview tasklegend code {
-  min-width: 5em;
+  min-width: 6em;
+}
+.preview tasklegend.active code::after {
+  content: "\235F";
+  font-size: 1.2em;
+  padding: 0;
 }
 tasklegend info {
   width: 1em;
@@ -378,7 +384,7 @@ tasklegend:active tooltip {
   transform: scale(1);
   border: 0;
   padding: 0 0.5vw;
-  margin-left: 1em;
+  margin-left: 0.3em;
   border-radius: 0.1vw;
 }
 taskview {

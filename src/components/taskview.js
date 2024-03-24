@@ -8,6 +8,9 @@ class TaskView extends Element
   {
     super()
 
+    this.id = id
+    task.active = state.todo.children.tasks.activeTasks[task.project] == id
+    this.task = task
     this.children = {
       taskname: { props: { innerText: task.name } },
       description: { props: { innerText: task.description } },
@@ -15,17 +18,32 @@ class TaskView extends Element
         name: "input",
         props: { name: "done", type: "checkbox", checked: task.closed },
         listeners: {
-          click: e => this.closeTask(id, e.target.checked)
+          click: e => this.closeTask(e.target.checked)
+        }
+      }),
+      active: formRow("Active", {
+        name: "input",
+        props: { name: "active", type: "checkbox", checked: task.active },
+        listeners: {
+          click: e => this.setActive(e.target.checked)
         }
       })
     }
   }
 
-  closeTask = (id, checked) =>
+  closeTask = checked =>
   {
     const tasks = state.todo.children.tasks.list
-    tasks[id].closed = checked
+    tasks[this.id].closed = checked
     state.todo.children.tasks.list = tasks
+    state.popup.close()
+  }
+
+  setActive = checked =>
+  {
+    const activeTasks = state.todo.children.tasks.activeTasks
+    activeTasks[this.task.project] = checked ? this.id : null
+    state.todo.children.tasks.activeTasks = activeTasks
     state.popup.close()
   }
 }

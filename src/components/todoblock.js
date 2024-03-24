@@ -73,6 +73,7 @@ class TodoBlock extends Element
       },
       assignChildren: obj => {
         const projectList = state.todo.children.project.children.selector.list
+        const activeTasks = state.todo.children.tasks.activeTasks
         obj.children = Object.assign({},
           state.todo.children.tasks
             .getTasksByProject(
@@ -81,7 +82,11 @@ class TodoBlock extends Element
               state.todo.children.workspace.activeWorkspace
             )
             .filter(t => Object.values(this.filterMethods).every(f => f(t[1])))
-            .map(t => new TaskLegend([t[0], {...t[1], color: projectList[t[1].project].color}])))
+            .map(([id, task]) => new TaskLegend([id, {
+              ...task,
+              color: projectList[task.project].color,
+              active: activeTasks[task.project] ? activeTasks[task.project] == id : false
+            }])))
       },
       listeners: {
         dragover: e => {

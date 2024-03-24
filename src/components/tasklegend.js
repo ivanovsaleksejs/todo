@@ -34,7 +34,7 @@ class TaskLegend extends Element
     this.props = {
       style: { backgroundColor: task.color },
       draggable: true,
-      className: task.closed ? "closed" : ""
+      className: [task.closed ? "closed" : null, task.active ? "active" : null].join(" ")
     }
     this.children.tooltip.props = { innerText: task.name }
   }

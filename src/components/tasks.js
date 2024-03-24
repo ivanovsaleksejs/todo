@@ -14,12 +14,23 @@ class Tasks extends Element
         state.todo.children.todoblocks.redraw()
       },
       get: _ => this.fetchTaskList()
+    },
+    activeTasks: {
+      set: val => {
+        this.storeActiveTasks(val)
+        state.todo.children.todoblocks.redraw()
+      },
+      get: _ => this.fetchActiveTasks()
     }
   }
 
   fetchTaskList = _ => readData("tasks", {})
 
   storeTaskList = list => saveData("tasks", list)
+
+  fetchActiveTasks = _ => readData("activeTasks", {})
+
+  storeActiveTasks = task => saveData("activeTasks", task)
 
   getTaskById = id => this.list[id]
 
