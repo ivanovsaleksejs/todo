@@ -54,6 +54,7 @@ class Tasks extends Element
         &&
         (!list || t[1].todoList == list)
       )
+      .sort((t1, t2) => parseInt(t2[1].project ?? 0, 16) - parseInt(t1[1].project ?? 0, 16))
       .sort((t1, t2) => (t2[1].active ?? false) - (t1[1].active ?? false))
       .sort((t1, t2) => (t1[1].closed ?? false) - (t2[1].closed ?? false))
 
