@@ -184,7 +184,7 @@ todofield {
   scrollbar-color: var(--main-light-solid) var(--main);
 }
 todofield.current {
-  background: #FFFFFF;
+  background: var(--main-bg);
 }
 popup {
   position: absolute;
@@ -321,7 +321,7 @@ tasklegend {
   margin: 0.2vw;
   padding: 0.7vh 0.5vw;
   border-radius: 0.2vw;
-  color: #FFFFFF;
+  color: var(--main-bg);
   text-shadow: 0 0 0.2vw var(--main);
   cursor: pointer;
   position: relative;
@@ -349,7 +349,7 @@ tasklegend info {
   width: 1em;
   height: 1em;
   display: flex;
-  border: 1px solid #FFFFFF;
+  border: 1px solid var(--main-bg);
   border-radius: 50%;
   justify-content: center;
   font-size: 0.9em;
@@ -369,8 +369,8 @@ tasklegend tooltip {
   top: 100%;
   padding: 0.3vw 0.7vw;
   border-radius: 0.2vw;
-  background: var(--main-light-solid);
-  color: #000000;
+  background: var(--main-bg);
+  color: var(--main);
   text-shadow: none;
   box-shadow: 1px 1px 1px var(--main);
   border: 1px solid var(--main);
@@ -378,6 +378,7 @@ tasklegend tooltip {
   opacity: 0;
   transition: all .05s ease-in-out;
   transform: scale(0);
+  z-index: 2;
 }
 tasklegend:hover {
   filter: brightness(1.2);
@@ -387,8 +388,8 @@ tasklegend.closed:hover {
 }
 tasklegend info:hover ~ tooltip {
   transform: scale(1);
+  filter: none;
   opacity: 1;
-  z-index: 2;
 }
 tasklegend:active tooltip {
   transform: scale(0);
@@ -431,6 +432,11 @@ taskview .commits {
 taskview commit {
   display: flex;
   flex-direction: column;
+  padding: 0.2vh 0.2vw;
+  border: 1px solid var(--main-fade);
+}
+taskview commit:nth-child(2n) {
+  background: var(--main-light);
 }
 taskview commit url {
   display: flex;
