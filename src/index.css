@@ -115,21 +115,22 @@ todo {
   flex-direction: column;
   transition: all .1s ease-in-out;
   width: 100%;
-  min-height: 100vh;
   background: var(--main-bg);
   padding: 1vw;
   box-sizing: border-box;
+  max-height: 100vh;
 }
 todoblocks {
   display: flex;
   justify-content: space-between;
+  overflow: hidden;
+  flex-grow: 1;
 }
 todoblocks.dragging {
   background: var(--main-fade);
 }
 .todo-block {
   width: 30vw;
-  height: 50vh;
   display: flex;
   border: 1px solid var(--main);
   border-radius: 0.3vw;
