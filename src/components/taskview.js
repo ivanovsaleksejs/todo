@@ -5,13 +5,13 @@ import state     from '../state.js'
 
 class TaskView extends Element
 {
+  name = "taskview"
+
   constructor(id, task)
   {
     super()
 
-    this.name = "taskview"
     this.id = id
-    task.active = state.todo.children.tasks.activeTasks[task.project] == id
     this.task = task
     this.children = {
       taskname: { props: { innerText: `${task.code} ${task.name}` } },
