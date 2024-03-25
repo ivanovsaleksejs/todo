@@ -4,7 +4,8 @@
   --main-fade: rgb(37 91 126 / 50%);
   --main-light: rgb(218 229 243 / 50%);
   --main-light-solid: rgb(241 246 253);
-  --main-bg: rbg(255 255 255);
+  --main-bg: rgb(255 255 255);
+  --links: rgb(9 105 218);
 }
 body {
   margin: 0;
@@ -193,7 +194,7 @@ popup {
   padding: 2vw;
   border: 1px solid var(--main);
   border-radius: 0.3vw;
-  background: var(--main-light-solid);
+  background: var(--main-bg);
   z-index: 1;
   transition: all .1s ease-in-out;
 }
@@ -216,12 +217,9 @@ popup closebutton:hover {
 popup closebutton::after {
   content: "\2715";
 }
-popup fieldset, popup content {
+popup fieldset, taskview {
   display: flex;
   flex-direction: column;
-}
-popup content {
-  min-width: 100%;
 }
 body:has(popup) {
   content: "";
@@ -235,7 +233,7 @@ popup:has(form) {
 }
 popup fieldset {
   border: 1px solid var(--main);
-  border-radius: 0.3vw;
+  border-radius: 0.1vw;
 }
 popup fieldset label {
   font-size: 1.2em;
@@ -243,7 +241,7 @@ popup fieldset label {
 popup input[type="submit"] {
   max-width: 20%;
   border: 1px solid var(--main);
-  border-radius: 0.3vw;
+  border-radius: 0.1vw;
   padding: 0.5vh 0.8vw;
   background-color: var(--main-light);
   color: var(--main);
@@ -261,7 +259,7 @@ popup fieldset > *:has(label) {
 }
 popup fieldset > *:has(label) *:nth-child(2) {
   border: 1px solid var(--main);
-  border-radius: 0.3vw;
+  border-radius: 0.1vw;
   padding: 0.5vh 0.3vw;
   background-color: var(--main-light);
   color: var(--main);
@@ -314,21 +312,10 @@ popup input[type=checkbox]:checked::after {
   color: var(--main-light-solid);
   background-color: var(--main);
 }
-popup:has(content) {
+popup:has(taskview) {
   width: 90%;
   min-height: 40vh;
   display: flex;
-}
-popup content taskname {
-  font-weight: bold;
-  margin-bottom: 1vh;
-}
-popup content description {
-  border: 1px solid var(--main);
-  border-radius: 0.1vw;
-  padding: 1vh 1vw;
-  margin: 1vh 0;
-  flex-grow: 1;
 }
 tasklegend {
   margin: 0.2vw;
@@ -423,9 +410,32 @@ tasklegend:active tooltip {
   border-radius: 0.1vw;
 }
 taskview {
+  min-width: 100%;
   display: flex;
   flex-direction: column;
 }
 taskview taskname {
   font-weight: bold;
+  margin-bottom: 1vh;
+}
+taskview description {
+  border: 1px solid var(--main);
+  border-radius: 0.1vw;
+  padding: 1vh 1vw;
+  margin: 1vh 0;
+  flex-grow: 1;
+}
+taskview .commits {
+    margin-bottom: 1em;
+}
+taskview commit {
+  display: flex;
+  flex-direction: column;
+}
+taskview commit url {
+  display: flex;
+}
+taskview commit url a {
+  color: var(--links);
+  text-decoration: none;
 }

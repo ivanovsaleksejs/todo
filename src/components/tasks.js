@@ -13,7 +13,18 @@ class Tasks extends Element
         this.storeTaskList(val)
         state.todo.children.todoblocks.redraw()
       },
-      get: _ => this.fetchTaskList()
+      get: _ => {
+        const projectList = state.todo.children.project.children.selector.list
+        const activeTasks = state.todo.children.tasks.activeTasks
+        const list = Object.entries(this.fetchTaskList())
+          .map(([id, task]) => [id, ({
+            ...task,
+            color: projectList[task.project].color,
+            repo: projectList[task.project].repo ?? null,
+            active: activeTasks[task.project] ? activeTasks[task.project] == id : false
+          })])
+        return Object.fromEntries(list)
+      }
     },
     activeTasks: {
       set: val => {
