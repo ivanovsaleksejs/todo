@@ -10,21 +10,6 @@ body {
   margin: 0;
   color: var(--main);
 }
-workspace, project {
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  align-items: center;
-  border: 1px solid var(--main);
-  border-radius: 0.3vw;
-  position: relative;
-  background: var(--main);
-  color: var(--main-light);
-  margin-bottom: 1vh;
-}
-workspace span, project span {
-  padding: 1vh;
-}
 button, export {
   border: 0 none;
   background: transparent;
@@ -40,6 +25,22 @@ button.add::after {
 }
 export::after {
   content: "\2913";
+}
+
+workspace, project {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid var(--main);
+  border-radius: 0.3vw;
+  position: relative;
+  background: var(--main);
+  color: var(--main-light);
+  margin-bottom: 1vh;
+}
+workspace span, project span {
+  padding: 1vh;
 }
 selector {
   width: 100%;
@@ -118,16 +119,16 @@ todo {
   padding: 1vw;
   box-sizing: border-box;
 }
-todoblocks.dragging {
-  background: #AAAAAA;
-}
 todoblocks {
   display: flex;
   justify-content: space-between;
 }
+todoblocks.dragging {
+  background: var(--main-fade);
+}
 .todo-block {
   width: 30vw;
-  height: 30vw;
+  height: 50vh;
   display: flex;
   border: 1px solid var(--main);
   border-radius: 0.3vw;
@@ -285,6 +286,34 @@ popup fieldset > *:has(label) input[type=color] {
 popup fieldset > *:has(label) textarea {
   min-height: 9em;
 }
+popup done, popup active {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: flex-end;
+}
+popup input[type=checkbox] {
+  appearance: none;
+  display: flex;
+  cursor: pointer;
+}
+popup input[type=checkbox]:after {
+  background-color: var(--main-light-solid);
+  color: var(--main);
+  content: "";
+  font-size: 2em;
+  border-radius: 0.1vw;
+  border: 1px solid var(--main);
+  line-height: 1em;
+  min-height: 1em;
+  min-width: 1em;
+  text-align: center;
+}
+popup input[type=checkbox]:checked::after {
+  content: "\2714";
+  color: var(--main-light-solid);
+  background-color: var(--main);
+}
 popup:has(content) {
   width: 90%;
   min-height: 40vh;
@@ -321,10 +350,13 @@ tasklegend code {
 .preview tasklegend code {
   min-width: 6em;
 }
-.preview tasklegend.active code::after {
+.preview tasklegend.active::after {
   content: "\235F";
-  font-size: 1.2em;
+  font-size: 1.5em;
   padding: 0;
+  position: absolute;
+  right: 0.4em;
+  top: 0;
 }
 tasklegend info {
   width: 1em;
@@ -361,7 +393,10 @@ tasklegend tooltip {
   transform: scale(0);
 }
 tasklegend:hover {
-  filter: none;
+  filter: brightness(1.2);
+}
+tasklegend.closed:hover {
+  filter: grayscale(0.3) opacity(0.8);
 }
 tasklegend info:hover ~ tooltip {
   transform: scale(1);
