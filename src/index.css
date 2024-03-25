@@ -139,12 +139,12 @@ todoblocks.dragging {
   display: flex;
   align-items: center;
 }
-.todo-block .toggle-preview, .todo-block .toggle-active {
+.todo-block .toggle {
   appearance: none;
   display: flex;
   margin: 0 0.2em;
 }
-.todo-block .toggle-preview::after, .todo-block .toggle-active::after {
+.todo-block .toggle::after {
   font-size: 1.5em;
   color: var(--main-light-solid);
   background-color: var(--main-fade);
@@ -153,16 +153,19 @@ todoblocks.dragging {
   cursor: pointer;
   transition: all .2s ease-in-out;
 }
-.todo-block .toggle-preview::after {
+.todo-block .toggle.preview::after {
   content: "\2630";
 }
-.todo-block .toggle-active::after {
+.todo-block .toggle.opened::after {
   content: "\2714";
 }
-.todo-block .toggle-preview:checked::after, .todo-block .toggle-active:checked::after {
+.todo-block .toggle.active::after {
+  content: "\235F";
+}
+.todo-block .toggle:checked::after {
   background-color: var(--main);
 }
-.todo-block .toggle-preview:hover::after, .todo-block .toggle-active:hover::after {
+.todo-block .toggle:hover::after {
   background-color: var(--active);
 }
 .todo-block legend button {
@@ -326,6 +329,7 @@ tasklegend {
   cursor: pointer;
   position: relative;
   display: flex;
+  filter: brightness(0.95);
 }
 tasklegend code {
   font-size: 1.2em;
@@ -381,7 +385,7 @@ tasklegend tooltip {
   z-index: 2;
 }
 tasklegend:hover {
-  filter: brightness(1.2);
+  filter: brightness(1);
 }
 tasklegend.closed:hover {
   filter: grayscale(0.3) opacity(0.8);

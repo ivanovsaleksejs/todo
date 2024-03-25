@@ -9,13 +9,17 @@ class TodoBlock extends Element
   name = "fieldset"
 
   bindings = {
-    filterActive: {
-      set: val => saveData(`filters.${this.blockName}.active`, val),
-      get: _   => readData(`filters.${this.blockName}.active`)
+    filterOpened: {
+      set: val => saveData(`filters.${this.blockName}.opened`, val),
+      get: _   => readData(`filters.${this.blockName}.opened`)
     },
     preview: {
       set: val => saveData(`options.${this.blockName}.preview`, val),
       get: _   => readData(`options.${this.blockName}.preview`)
+    },
+    filterActive: {
+      set: val => saveData(`options.${this.blockName}.active`, val),
+      get: _   => readData(`options.${this.blockName}.active`)
     }
   }
 
@@ -28,7 +32,8 @@ class TodoBlock extends Element
   }
 
   filterMethods = {
-    active: e => !this.filterActive || !e.closed
+    opened: e => !this.filterOpened || !e.closed,
+    active: e => !this.filterActive || e.active
   }
 
   children = {
@@ -38,7 +43,7 @@ class TodoBlock extends Element
           name: "input",
           props: {
             type: "checkbox",
-            className: "toggle-preview",
+            className: "toggle preview",
             checked: this.preview,
             title: "Toggle task view"
           },
@@ -46,13 +51,25 @@ class TodoBlock extends Element
             isChecked: obj => obj.props.checked = this.preview
           }
         },
+        toggleOpened: {
+          name: "input",
+          props: {
+            type: "checkbox",
+            className: "toggle opened",
+            checked: this.filterOpened,
+            title: "Show only open tasks"
+          },
+          preRender: {
+            isChecked: obj => obj.props.checked = this.filterOpened
+          }
+        },
         toggleActive: {
           name: "input",
           props: {
             type: "checkbox",
-            className: "toggle-active",
+            className: "toggle active",
             checked: this.filterActive,
-            title: "Show only open tasks"
+            title: "Show only active tasks"
           },
           preRender: {
             isChecked: obj => obj.props.checked = this.filterActive
@@ -111,6 +128,7 @@ class TodoBlock extends Element
     this.props = { className: className }
     this.children.legend.props = { innerText: blockName }
     this.children.todoField.fieldType = type
+    this.children.legend.children.toggleOpened.listeners = { click: this.toggleOpened }
     this.children.legend.children.toggleActive.listeners = { click: this.toggleActive }
     this.children.legend.children.preview.listeners = { click: this.togglePreview }
   }
@@ -126,6 +144,12 @@ class TodoBlock extends Element
   {
     this.preview = e.target.checked
     e.target.checked ? this.node.classList.add("preview") : this.node.classList.remove("preview")
+  }
+
+  toggleOpened = e =>
+  {
+    this.filterOpened = e.target.checked
+    this.redraw()
   }
 
   toggleActive = e =>
