@@ -31,7 +31,6 @@ class CommitList extends Element
   constructor(commitList)
   {
     super()
-    console.log(commitList)
     this.children = this.list(commitList)
   }
 
