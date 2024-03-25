@@ -12,7 +12,7 @@ class TaskView extends Element
     task.active = state.todo.children.tasks.activeTasks[task.project] == id
     this.task = task
     this.children = {
-      taskname: { props: { innerText: task.name } },
+      taskname: { props: { innerText: `${task.code} ${task.name}` } },
       description: { props: { innerText: task.description } },
       done: formRow("Completed", {
         name: "input",
