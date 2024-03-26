@@ -46,6 +46,9 @@ class TaskView extends Element
 
   async fetchCommits()
   {
+    if (!this.task.repo) {
+      return []
+    }
     const apiUrl = `https://api.github.com/repos/${this.task.repo}/commits`
 
     const response = await fetch(apiUrl)
