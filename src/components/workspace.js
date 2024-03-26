@@ -86,10 +86,20 @@ class Workspace extends Element
     }
   }
 
-  addWorkspaceForm = _ =>
-    form("Add new workspace",
+  addWorkspaceForm = (id, value) =>
+    form(`${id ? "Edit" : "Add new"} workspace`,
       {
-        workspaceName: formRow("Workspace Name", { name: "input", props: { name: "workspacename" } }),
+        workspaceName: formRow(
+          "Workspace Name",
+          {
+            name: "input",
+            props: {
+              name: "workspacename",
+              value: id ? value : ""
+            }
+          }
+        ),
+        workspaceId: { name: "input", props: { type: "hidden", name: "id", value: (id ?? '') } },
         submit: { name: "input", props: { type: "submit" } }
       },
       {
@@ -100,15 +110,17 @@ class Workspace extends Element
   saveWorkspaceEvent = e =>
   {
     e.preventDefault()
-    const workspaceName = (new FormData(e.target)).get("workspacename")
-    this.saveWorkspace(workspaceName)
+    const formData = new FormData(e.target)
+    const workspaceName = formData.get("workspacename")
+    const workspaceId = formData.get("id")
+    this.saveWorkspace(workspaceName, workspaceId ? workspaceId : randomUUID())
     state.popup.close()
   }
 
-  saveWorkspace = workspaceName =>
+  saveWorkspace = (workspaceName, workspaceId) =>
   {
     const list = this.children.selector.list
-    list[randomUUID()] = workspaceName
+    list[workspaceId] = workspaceName
     this.children.selector.list = list
   }
 
@@ -132,6 +144,13 @@ class Workspace extends Element
           },
           data: {
             selected: active ? active == id : id == 'all'
+          },
+          children: {
+            edit: {
+              listeners: {
+                click: e => new Popup(this.addWorkspaceForm(id, value))
+              }
+            }
           }
         })
       )

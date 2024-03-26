@@ -85,6 +85,13 @@ selector item[data-selected=true] + item[data-selected=false] {
   left: 80%;
   transform: translate(-100%, 0);
 }
+selector edit::after {
+  content: "\270E";
+  position: absolute;
+  right: 0.3em;
+  font-size: 1.2em;
+  cursor: pointer;
+}
 prev, next {
   height: 100%;
   aspect-ratio: 1 / 1;
@@ -433,7 +440,7 @@ taskview description {
   flex-grow: 1;
 }
 taskview .commits {
-    margin-bottom: 1em;
+  margin-bottom: 1em;
 }
 taskview commit {
   display: flex;
