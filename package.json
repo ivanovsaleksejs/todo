@@ -9,11 +9,11 @@
     "nodemon": "^3.1.0"
   },
   "scripts": {
-    "dev": "nodemon -e js,html,css",
+    "dev": "nodemon -e js,html,css,ico",
     "build": "ln -sf $(pwd)/node_modules/element.js/element.js $(pwd)/src/element.js && yarn copy-files",
     "copy-files": "rsync -av --exclude='node_modules' src/ dist/"
   },
   "nodemonConfig": {
-    "ext": "js,html,css"
+    "ext": "js,html,css,ico"
   }
 }
