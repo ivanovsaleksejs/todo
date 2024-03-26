@@ -118,6 +118,7 @@ todo {
   background: var(--main-bg);
   padding: 1vw;
   box-sizing: border-box;
+  min-height: 100vh;
   max-height: 100vh;
 }
 todoblocks {
