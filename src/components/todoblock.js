@@ -26,7 +26,7 @@ class TodoBlock extends Element
   postRender = {
     togglePreview: _ => {
       if (this.preview) {
-        this.node.classList.add('preview')
+        this.node.classList.add("preview")
       }
     }
   }
@@ -109,7 +109,7 @@ class TodoBlock extends Element
           e.target.classList.add("current")
         },
         drop: e => {
-          state.todo.children.todoblocks.node.classList.remove('dragging')
+          state.todo.children.todoblocks.node.classList.remove("dragging")
           const taskId = e.dataTransfer.getData("task")
           const taskList = state.todo.children.tasks.list
           taskList[taskId].todoList = this.type

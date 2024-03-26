@@ -75,7 +75,7 @@ class Workspace extends Element
         this.storeActiveWorkspace(val)
         const workspaceList = Object.values(this.children.selector.children)
         workspaceList.forEach(item => item.node.dataset.selected = false)
-        workspaceList.find(item => item.id == (val ?? 'all')).node.dataset.selected = true
+        workspaceList.find(item => item.id == (val ?? "all")).node.dataset.selected = true
         const project = state.todo.children.project
         project.activeProject = null
         project.children.selector.children = project.getProjectList(project.fetchProjectList(), val)
@@ -99,7 +99,7 @@ class Workspace extends Element
             }
           }
         ),
-        workspaceId: { name: "input", props: { type: "hidden", name: "id", value: (id ?? '') } },
+        workspaceId: { name: "input", props: { type: "hidden", name: "id", value: (id ?? "") } },
         submit: { name: "input", props: { type: "submit" } }
       },
       {
@@ -156,7 +156,7 @@ class Workspace extends Element
       )
 
   getWorkspaceOptions = (val, active) =>
-    Object.entries({...{'':''}, ...val}).map(
+    Object.entries({...{"":""}, ...val}).map(
       ([id, value]) => ({
         name: "option",
         props: {

@@ -97,7 +97,7 @@ class Tasks extends Element
     const description = formdata.get("taskdescription")
     const todoList = formdata.get("list")
     const projectTasks = this.getTasksByProject(projectId)
-    const code = `${project.code}-${projectTasks.length ? (Math.max(...(projectTasks.map(t => +t[1].code.split('-')[1])))+1) : 1}`
+    const code = `${project.code}-${projectTasks.length ? (Math.max(...(projectTasks.map(t => +t[1].code.split("-")[1])))+1) : 1}`
     this.saveTask(taskName, projectId, description, todoList, code)
     state.popup.close()
   }

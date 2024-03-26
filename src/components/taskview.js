@@ -58,7 +58,7 @@ class TaskView extends Element
 
     return filteredCommits.map(commit => ({
       author: commit.commit.committer.name,
-      date: new Date(commit.commit.committer.date).toLocaleString('lv-LV', { day: '2-digit', month: '2-digit', year: 'numeric', hour:'2-digit', minute:'2-digit', second:'2-digit' }),
+      date: new Date(commit.commit.committer.date).toLocaleString("lv-LV", { day: "2-digit", month: "2-digit", year: "numeric", hour:"2-digit", minute:"2-digit", second:"2-digit" }),
       message: commit.commit.message,
       url: commit.html_url,
       sha: commit.sha

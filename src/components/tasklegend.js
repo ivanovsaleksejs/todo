@@ -14,7 +14,7 @@ class TaskLegend extends Element
   listeners = {
     click: e => new Popup(new TaskView(this.id, this.task)),
     dragstart: e => {
-      state.todo.children.todoblocks.node.classList.add('dragging')
+      state.todo.children.todoblocks.node.classList.add("dragging")
       e.dataTransfer.setData("task", this.id)
     }
   }
