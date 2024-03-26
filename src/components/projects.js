@@ -79,7 +79,7 @@ class Project extends Element
         this.storeActiveProject(val)
         const projectList = Object.values(this.children.selector.children)
         projectList.forEach(item => item.node.dataset.selected = false)
-        projectList.find(item => item.id == (val ?? 'all')).node.dataset.selected = true
+        projectList.find(item => item.id == (val ?? "all")).node.dataset.selected = true
         state.todo.children.todoblocks.redraw()
       },
       get: _ => this.fetchActiveProject()
@@ -100,8 +100,8 @@ class Project extends Element
 
   getProjectList = (val, workspace = null, active = null) =>
     Object
-      .entries({...{'all':{name: 'All'}}, ...val})
-      .filter(p => p[0] == 'all' || !workspace || workspace == p[1].workspace)
+      .entries({...{"all":{name: "All"}}, ...val})
+      .filter(p => p[0] == "all" || !workspace || workspace == p[1].workspace)
       .map(([id, value]) =>
         ({
           name: "item",
@@ -110,14 +110,21 @@ class Project extends Element
             innerText: value.name
           },
           data: {
-            selected: active ? active == id : id == 'all'
+            selected: active ? active == id : id == "all"
+          },
+          children: id == "all" ? {} : {
+            edit: {
+              listeners: {
+                click: e => new Popup(this.addProjectForm(id, value))
+              }
+            }
           }
         })
       )
 
   getProjectOptions = (val, workspace = null, active = null) =>
     Object
-      .entries({...{'':{name: ''}}, ...val})
+      .entries({...{"":{name: ""}}, ...val})
       .filter(p => !p[0] || !workspace || workspace == p[1].workspace)
       .map(([id, value]) =>
         ({
@@ -140,29 +147,32 @@ class Project extends Element
     const projectName = formdata.get("projectname")
     const projectColor = formdata.get("projectcolor")
     const workspace = formdata.get("workspace")
-    const code = projectName.replace(/\s+/, '').slice(0, 5).toUpperCase()
-    this.saveProject(projectName, projectColor, workspace, code)
+    const repo = formdata.get("repo")
+    const projectId = formdata.get("id")
+    const code = projectName.replace(/\s+/, "").slice(0, 5).toUpperCase()
+    this.saveProject(projectId ? projectId : randomUUID(), projectName, projectColor, workspace, code, repo)
     state.popup.close()
   }
 
-  saveProject = (projectName, projectColor, workspace, code) =>
+  saveProject = (id, name, color, workspace, code, repo) =>
   {
     const select = state.todo.children.project.children.selector
     const list = select.list
-    list[randomUUID()] = { name: projectName, color: projectColor, workspace: workspace, code: code }
+    list[id] = { name, color, workspace, code, repo }
     select.list = list
+    state.todo.children.todoblocks.redraw()
   }
 
-  addProjectForm = _ =>
-    form("Add new project",
+  addProjectForm = (id, project) =>
+    form(`${id ? "Edit" : "Add new"} project`,
       {
-        projectName: formRow("Project name", { name: "input", props: { name: "projectname" } }),
+        projectName: formRow("Project name", { name: "input", props: { name: "projectname", value: project ? project.name : "" } }),
         projectColor: formRow("Project color", {
           name: "input",
           props: {
             name: "projectcolor",
             type: "color",
-            value: "#" + [0,0,0].map(_=>(192*Math.random()|0).toString(16)).join('').padStart(6, '0')
+            value: project ? project.color : ("#" + [0,0,0].map(_=>(192*Math.random()|0).toString(16)).join("").padStart(6, "0"))
           }
         }),
         projectWorkspace: formRow("Workspace", {
@@ -171,10 +181,12 @@ class Project extends Element
           preRender: {
             getChildren: obj => {
               const workspace = state.todo.children.workspace
-              obj.children = workspace.getWorkspaceOptions(workspace.children.selector.list, workspace.activeWorkspace)
+              obj.children = workspace.getWorkspaceOptions(workspace.children.selector.list, project ? project.workspace : workspace.activeWorkspace)
             }
           }
         }),
+        projectRepo: formRow("Project code repository", { name: "input", props: { name: "repo" } }),
+        projectId: { name: "input", props: { type: "hidden", name: "id", value: (id ?? "") } },
         submit: { name: "input", props: { type: "submit" } }
       },
       {
