@@ -134,7 +134,7 @@ class Workspace extends Element
 
   getWorkspaceList = (val, active) =>
     Object
-      .entries({...{'all':'All'}, ...val})
+      .entries({...{"all":"All"}, ...val})
       .map(([id, value]) =>
         ({
           name: "item",
@@ -143,9 +143,9 @@ class Workspace extends Element
             innerText: value,
           },
           data: {
-            selected: active ? active == id : id == 'all'
+            selected: active ? active == id : id == "all"
           },
-          children: {
+          children: id == "all" ? {} : {
             edit: {
               listeners: {
                 click: e => new Popup(this.addWorkspaceForm(id, value))
