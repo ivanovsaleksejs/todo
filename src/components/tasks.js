@@ -58,10 +58,16 @@ class Tasks extends Element
       .sort((t1, t2) => (t2[1].active ?? false) - (t1[1].active ?? false))
       .sort((t1, t2) => (t1[1].closed ?? false) - (t2[1].closed ?? false))
 
-  addTaskForm = list => 
+  addTaskForm = (list, id, task) =>
     form("Add new task",
       {
-        taskName: formRow("Task name", { name: "input", props: { name: "taskname" } }),
+        taskName: formRow("Task name", {
+          name: "input",
+          props: {
+            name: "taskname",
+            value: task ? task.name : ""
+          }
+        }),
         taskProject: formRow("Project", {
           name: "select",
           props: { name: "project" },
@@ -69,15 +75,27 @@ class Tasks extends Element
             getChildren: obj => {
               const project = state.todo.children.project
               const workspace = state.todo.children.workspace
-              obj.children = project.getProjectOptions(project.fetchProjectList(), workspace.fetchActiveWorkspace(), project.fetchActiveProject())
+              obj.children = project.getProjectOptions(
+                project.fetchProjectList(),
+                task ? null : workspace.fetchActiveWorkspace(),
+                task ? task.project : project.fetchActiveProject()
+              )
             }
           }
         }),
-        taskDescription: formRow("Description", { name: "textarea", props: { name: "taskdescription" } }),
+        taskDescription: formRow("Description", {
+          name: "textarea",
+          props: {
+            name: "taskdescription",
+            innerText: task ? task.description : ""
+          }
+        }),
         taskList: {
           name: "input",
           props: { name: "list", type: "hidden", value: list }
         },
+        taskId: { name: "input", props: { type: "hidden", name: "id", value: task ? id : "" } },
+        taskCode: { name: "input", props: { type: "hidden", name: "code", value: task ? task.code : "" } },
         submit: { name: "input", props: { type: "submit" } }
       },
       {
@@ -90,27 +108,31 @@ class Tasks extends Element
   saveTaskEvent = e =>
   {
     e.preventDefault()
+
     const formdata = new FormData(e.target)
     const taskName = formdata.get("taskname")
     const projectId = formdata.get("project")
     const project = state.todo.children.project.getProject(projectId)
+    const projectTasks = this.getTasksByProject(projectId)
     const description = formdata.get("taskdescription")
     const todoList = formdata.get("list")
-    const projectTasks = this.getTasksByProject(projectId)
-    const code = `${project.code}-${projectTasks.length ? (Math.max(...(projectTasks.map(t => +t[1].code.split("-")[1])))+1) : 1}`
-    this.saveTask(taskName, projectId, description, todoList, code)
+    const taskId = formdata.get("id")
+    const taskCode = formdata.get("code")
+
+    const code = taskCode ? taskCode : `${project.code}-${projectTasks.length ? (Math.max(...(projectTasks.map(t => +t[1].code.split("-")[1])))+1) : 1}`
+    this.saveTask(taskId ? taskId : randomUUID(), taskName, projectId, description, todoList, code)
     state.popup.close()
   }
 
-  saveTask = (taskName, project, description, todoList, code) =>
+  saveTask = (id, name, project, description, todoList, code) =>
   {
     const list = state.todo.children.tasks.list
-    list[randomUUID()] = {
-      name: taskName,
-      project: project,
-      description: description,
-      todoList: todoList,
-      code: code
+    list[id] = {
+      name,
+      project,
+      description,
+      todoList,
+      code
     }
     state.todo.children.tasks.list = list
   }

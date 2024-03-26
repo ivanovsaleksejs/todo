@@ -85,7 +85,7 @@ selector item[data-selected=true] + item[data-selected=false] {
   left: 80%;
   transform: translate(-100%, 0);
 }
-selector edit::after {
+selector edit::after, taskview edit::after {
   content: "\270E";
   position: absolute;
   right: 0.3em;
@@ -431,6 +431,15 @@ taskview {
 taskview taskname {
   font-weight: bold;
   margin-bottom: 1vh;
+}
+taskview header {
+  display: flex;
+}
+taskview options {
+  margin-left: 1em;
+}
+taskview edit::after {
+  position: relative;
 }
 taskview description {
   border: 1px solid var(--main);

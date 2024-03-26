@@ -1,4 +1,5 @@
 import { form, formRow } from './form.js'
+import Popup from './popup.js'
 import CommitList from './commitlist.js'
 import { Element }   from '../element.js'
 import state     from '../state.js'
@@ -14,7 +15,20 @@ class TaskView extends Element
     this.id = id
     this.task = task
     this.children = {
-      taskname: { props: { innerText: `${task.code} ${task.name}` } },
+      header: {
+        children: {
+          taskname: { props: { innerText: `${task.code} ${task.name}` } },
+          options: {
+            children: {
+              edit: {
+                listeners: {
+                  click: e => new Popup(state.todo.children.tasks.addTaskForm(this.task.todoList, this.id, this.task))
+                }
+              }
+            }
+          },
+        }
+      },
       description: { props: { innerText: task.description } },
       commits: {
         name: "fieldset",
