@@ -6,6 +6,7 @@
   --main-light-solid: rgb(241 246 253);
   --main-bg: rgb(255 255 255);
   --links: rgb(9 105 218);
+  --danger: rgb(235 3 3);
 }
 body {
   margin: 0;
@@ -66,6 +67,7 @@ selector item {
   font-size: 1.2em;
   border-radius: 0.3vw;
   margin: 0.1vh 0;
+  display: flex;
 }
 selector item[data-selected=true] {
   left: 50%;
@@ -85,12 +87,25 @@ selector item[data-selected=true] + item[data-selected=false] {
   left: 80%;
   transform: translate(-100%, 0);
 }
+selector options {
+  display: flex;
+  width: 100%;
+  position: absolute;
+  right: 0;
+  justify-content: right;
+  padding-right: 0.3vw;
+}
 selector edit::after, taskview edit::after {
   content: "\270E";
-  position: absolute;
-  right: 0.3em;
   font-size: 1.2em;
   cursor: pointer;
+}
+selector delete::after, taskview delete::after {
+  content: "\2612";
+  font-size: 1.2em;
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--danger);
 }
 prev, next {
   height: 100%;
@@ -169,7 +184,7 @@ todoblocks.dragging {
   content: "\2714";
 }
 .todo-block .toggle.active::after {
-  content: "\235F";
+  content: "\2692";
 }
 .todo-block .toggle:checked::after {
   background-color: var(--main);
@@ -229,6 +244,37 @@ popup closebutton:hover {
 popup closebutton::after {
   content: "\2715";
 }
+popup header {
+  margin-bottom: 2vh;
+}
+popup .preview {
+  display: flex;
+}
+popup .preview tasklegend {
+  margin: 0;
+}
+popup .preview tasklegend tooltip {
+  top: 0;
+}
+popup buttons {
+  display: flex;
+  justify-content: space-between;
+  min-width: 20vw;
+  margin-top: 2vh;
+}
+popup buttons > * {
+  border-radius: 0.1vw;
+  padding: 0.3vh 0.6vw;
+  color: var(--main-light-solid);
+  cursor: pointer;
+}
+popup buttons ok.danger {
+  background-color: var(--danger);
+  font-weight: bold;
+}
+popup buttons cancel {
+  background-color: var(--main-fade);
+}
 popup fieldset, taskview {
   display: flex;
   flex-direction: column;
@@ -261,7 +307,8 @@ popup input[type="submit"] {
   cursor: pointer;
 }
 popup input[type="submit"]:hover {
-  background-color: var(--main-fade);
+  background-color: var(--main);
+  color: var(--main-light-solid);
 }
 popup fieldset > *:has(label) {
   width: 100%;
@@ -352,7 +399,7 @@ tasklegend code {
   min-width: 6em;
 }
 .preview tasklegend.active::after {
-  content: "\235F";
+  content: "\2692";
   font-size: 1.5em;
   padding: 0;
   position: absolute;
@@ -426,6 +473,8 @@ tasklegend:active tooltip {
   text-overflow: ellipsis;
   max-width: 70%;
   overflow: hidden;
+  border: 1px ridge var(--main-fade);
+  box-shadow: none;
 }
 taskview {
   min-width: 100%;
@@ -441,9 +490,6 @@ taskview header {
 }
 taskview options {
   margin-left: 1em;
-}
-taskview edit::after {
-  position: relative;
 }
 taskview description {
   border: 1px solid var(--main);

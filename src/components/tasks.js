@@ -2,6 +2,7 @@ import { Element }   from '../element.js'
 import { form, formRow } from './form.js'
 import { randomUUID } from '../functions.js'
 import { readData, saveData } from '../storage.js'
+import TaskLegend from './tasklegend.js'
 import Popup from './popup.js'
 import state     from '../state.js'
 
@@ -135,6 +136,41 @@ class Tasks extends Element
       code
     }
     state.todo.children.tasks.list = list
+  }
+
+  deleteTaskForm = (id, task) =>
+    ({
+      header: { props: { innerText: "Delete this task? Cannot be undone!" } },
+      info: {
+        props: { className: "preview" },
+        children: {
+          taskLegend: new TaskLegend([id, task]),
+        }
+      },
+      buttons: {
+        children: {
+          ok: {
+            props: { innerText: "OK", className: "danger" },
+            listeners: {
+              click: _ => this.deleteTask(id)
+            }
+          },
+          cancel: {
+            props: { innerText: "Cancel" },
+            listeners: {
+              click: _ => state.popup.close()
+            }
+          }
+        }
+      }
+    })
+
+  deleteTask = id =>
+  {
+    const list = this.list
+    delete list[id]
+    this.list = list
+    state.popup.close()
   }
 }
 

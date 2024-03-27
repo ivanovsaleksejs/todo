@@ -24,6 +24,11 @@ class TaskView extends Element
                 listeners: {
                   click: e => new Popup(state.todo.children.tasks.addTaskForm(this.task.todoList, this.id, this.task))
                 }
+              },
+              delete: {
+                listeners: {
+                  click: e => new Popup(state.todo.children.tasks.deleteTaskForm(this.id, this.task))
+                }
               }
             }
           },
