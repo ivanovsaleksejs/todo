@@ -422,6 +422,9 @@ tasklegend:active tooltip {
   padding: 0 0.5vw;
   margin-left: 0.3em;
   border-radius: 0.1vw;
+  text-overflow: ellipsis;
+  max-width: 70%;
+  overflow: hidden;
 }
 taskview {
   min-width: 100%;
