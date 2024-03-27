@@ -339,6 +339,7 @@ tasklegend {
   position: relative;
   display: flex;
   filter: brightness(0.95);
+  align-items: center;
 }
 tasklegend code {
   font-size: 1.2em;
