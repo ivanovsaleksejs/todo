@@ -2,6 +2,7 @@ import { Element }   from '../element.js'
 import { form, formRow } from './form.js'
 import { randomUUID } from '../functions.js'
 import { readData, saveData } from '../storage.js'
+import TaskLegend from './tasklegend.js'
 import Popup from './popup.js'
 import state from '../state.js'
 
@@ -113,9 +114,18 @@ class Project extends Element
             selected: active ? active == id : id == "all"
           },
           children: id == "all" ? {} : {
-            edit: {
-              listeners: {
-                click: e => new Popup(this.addProjectForm(id, value))
+            options: {
+              children: {
+                edit: {
+                  listeners: {
+                    click: e => new Popup(this.addProjectForm(id, value))
+                  }
+                },
+                delete: {
+                  listeners: {
+                    click: e => new Popup(this.deleteProjectForm(id, value.name))
+                  }
+                }
               }
             }
           }
@@ -195,6 +205,46 @@ class Project extends Element
         }
       }
     )
+
+  deleteProjectForm = (id, name) =>
+    ({
+      header: { props: { innerText: `Delete the project '${name}' and all its tasks? Cannot be undone!` } },
+      projectInfo: {
+        props: { className: "preview" },
+        children: Object.assign({}, [
+            { name: "p", props: { innerText: "Tasks assigned to this project:" } },
+            ...state.todo.children.tasks
+              .getTasksByProject(id)
+              .map(t => new TaskLegend(t))
+          ])
+      },
+      buttons: {
+        children: {
+          ok: {
+            props: { innerText: "OK", className: "danger" },
+            listeners: {
+              click: _ => this.deleteProject(id)
+            }
+          },
+          cancel: {
+            props: { innerText: "Cancel" },
+            listeners: {
+              click: _ => state.popup.close()
+            }
+          }
+        }
+      }
+    })
+
+  deleteProject = id =>
+  {
+    const select = state.todo.children.project.children.selector
+    const list = select.list
+    delete list[id]
+    state.todo.children.tasks.getTasksByProject(id).map(([id, _]) => state.todo.children.tasks.deleteTask(id))
+    this.activeProject = this.activeProject == id ? null : this.activeProject
+    select.list = list
+  }
 }
 
 export default Project

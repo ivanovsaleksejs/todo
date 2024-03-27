@@ -250,11 +250,22 @@ popup header {
 popup .preview {
   display: flex;
 }
-popup .preview tasklegend {
+popup info.preview tasklegend {
   margin: 0;
+}
+popup projectinfo.preview tasklegend {
+  box-sizing: border-box;
+  margin-left: 0;
+  margin-right: 0;
 }
 popup .preview tasklegend tooltip {
   top: 0;
+}
+popup projectinfo.preview {
+  flex-direction: column;
+  max-height: 40vh;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 popup buttons {
   display: flex;
