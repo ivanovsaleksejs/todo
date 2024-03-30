@@ -76,11 +76,11 @@ class Workspace extends Element
         const workspaceList = Object.values(this.children.selector.children)
         workspaceList.forEach(item => item.node.dataset.selected = false)
         workspaceList.find(item => item.id == (val ?? "all")).node.dataset.selected = true
-        const project = state.todo.children.project
-        project.activeProject = null
-        project.children.selector.children = project.getProjectList(project.fetchProjectList(), val)
-        project.children.selector.prepareNode(true)
-        state.todo.children.todoblocks.redraw()
+        const projects = state.todo.children.project
+        if (projects.activeProject && projects.getProject(projects.activeProject).workspace !== val) {
+          projects.activeProject = null
+        }
+        projects.children.selector.list = projects.children.selector.list
       },
       get: _ => this.fetchActiveWorkspace()
     }

@@ -34,7 +34,7 @@ class Project extends Element
         }
       },
       listeners: {
-        change: e => state.todo.children.project.activeProject = e.target.options[e.target.selectedIndex].value ?? null
+        change: e => this.activeProject = e.target.options[e.target.selectedIndex].value ?? null
       },
       preRender: {
         getChildren: _ => {
@@ -80,7 +80,8 @@ class Project extends Element
         this.storeActiveProject(val)
         const projectList = Object.values(this.children.selector.children)
         projectList.forEach(item => item.node.dataset.selected = false)
-        projectList.find(item => item.id == (val ?? "all")).node.dataset.selected = true
+        const newActiveProject = projectList.find(item => item.id == (val ?? "all")) ?? projectList.find(item => item.id == "all")
+        newActiveProject.node.dataset.selected = true
         state.todo.children.todoblocks.redraw()
       },
       get: _ => this.fetchActiveProject()
@@ -168,8 +169,12 @@ class Project extends Element
   {
     const select = state.todo.children.project.children.selector
     const list = select.list
+    const oldWorkspace = list[id] ? list[id].workspace : false
     list[id] = { name, color, workspace, code, repo }
     select.list = list
+    if (oldWorkspace && oldWorkspace == state.todo.children.workspace.activeWorkspace) {
+      state.todo.children.workspace.activeWorkspace = workspace
+    }
     state.todo.children.todoblocks.redraw()
   }
 
@@ -238,7 +243,7 @@ class Project extends Element
 
   deleteProject = id =>
   {
-    const select = state.todo.children.project.children.selector
+    const select = this.children.selector
     const list = select.list
     delete list[id]
     state.todo.children.tasks.getTasksByProject(id).map(([id, _]) => state.todo.children.tasks.deleteTask(id))
