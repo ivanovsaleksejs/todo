@@ -27,8 +27,9 @@ class Project extends Element
         list: {
           set: val => {
             this.storeProjectList(val)
-            this.children.selector.children = this.getProjectList(val, state.todo.activeWorkspace)
+            this.children.selector.children = this.getProjectList(state.todo.activeWorkspace)
             this.children.selector.prepareNode(true)
+            state.todo.children.todoblocks.redraw()
           },
           get: _ => this.fetchProjectList()
         }
@@ -39,7 +40,6 @@ class Project extends Element
       preRender: {
         getChildren: _ => {
           this.children.selector.children = this.getProjectList(
-            this.fetchProjectList(),
             state.todo.children.workspace.activeWorkspace,
             this.fetchActiveProject()
           )
@@ -49,7 +49,7 @@ class Project extends Element
     prev: {
       listeners: {
         click: e => {
-          const projectList = Object.entries(this.getProjectList(this.fetchProjectList(), state.todo.children.workspace.activeWorkspace, this.activeProject))
+          const projectList = Object.entries(this.getProjectList(state.todo.children.workspace.activeWorkspace, this.activeProject))
           let index = projectList.findIndex(([id, val]) => val.id == this.activeProject)
           if (index < 0) {
             index = projectList.length
@@ -62,7 +62,7 @@ class Project extends Element
     next: {
       listeners: {
         click: e => {
-          const projectList = Object.entries(this.getProjectList(this.fetchProjectList(), state.todo.children.workspace.activeWorkspace, this.activeProject))
+          const projectList = Object.entries(this.getProjectList(state.todo.children.workspace.activeWorkspace, this.activeProject))
           let index = projectList.findIndex(([id, val]) => val.id == this.activeProject)
           if (index > projectList.length || index < 0) {
             index = 0
@@ -78,10 +78,12 @@ class Project extends Element
     activeProject: {
       set: val => {
         this.storeActiveProject(val)
-        const projectList = Object.values(this.children.selector.children)
-        projectList.forEach(item => item.node.dataset.selected = false)
-        const newActiveProject = projectList.find(item => item.id == (val ?? "all")) ?? projectList.find(item => item.id == "all")
-        newActiveProject.node.dataset.selected = true
+        const projectList = this.children.selector.children
+        projectList.forEach(item => item.node ? item.node.dataset.selected = false : null)
+        const newActiveProject = projectList.find(item => item.id === (val ?? "all")) ?? projectList.find(item => item.id === "all")
+        if (newActiveProject && newActiveProject.node) {
+          newActiveProject.node.dataset.selected = true
+        }
         state.todo.children.todoblocks.redraw()
       },
       get: _ => this.fetchActiveProject()
@@ -100,9 +102,9 @@ class Project extends Element
 
   getProject = id => this.fetchProjectList()[id]
 
-  getProjectList = (val, workspace = null, active = null) =>
+  getProjectList = (workspace = null, active = null) =>
     Object
-      .entries({...{"all":{name: "All"}}, ...val})
+      .entries({...{"all":{name: "All"}}, ...this.fetchProjectList()})
       .filter(p => p[0] == "all" || !workspace || workspace == p[1].workspace)
       .map(([id, value]) =>
         ({
@@ -133,9 +135,9 @@ class Project extends Element
         })
       )
 
-  getProjectOptions = (val, workspace = null, active = null) =>
+  getProjectOptions = (workspace = null, active = null) =>
     Object
-      .entries({...{"":{name: ""}}, ...val})
+      .entries({...{"":{name: ""}}, ...this.fetchProjectList()})
       .filter(p => !p[0] || !workspace || workspace == p[1].workspace)
       .map(([id, value]) =>
         ({
@@ -213,7 +215,7 @@ class Project extends Element
 
   deleteProjectForm = (id, name) =>
     ({
-      header: { props: { innerText: `Delete the project '${name}' and all its tasks? Cannot be undone!` } },
+      header: { props: { innerHTML: `Delete the project <b>${name}</b> and all its tasks? Cannot be undone!` } },
       projectInfo: {
         props: { className: "preview" },
         children: Object.assign({}, [
@@ -245,10 +247,11 @@ class Project extends Element
   {
     const select = this.children.selector
     const list = select.list
-    delete list[id]
     state.todo.children.tasks.getTasksByProject(id).map(([id, _]) => state.todo.children.tasks.deleteTask(id))
+    delete list[id]
     this.activeProject = this.activeProject == id ? null : this.activeProject
     select.list = list
+    state.popup?.close()
   }
 }
 

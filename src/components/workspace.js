@@ -2,6 +2,7 @@ import { Element }   from '../element.js'
 import { form, formRow } from './form.js'
 import { randomUUID }    from '../functions.js'
 import { readData, saveData, exportData } from '../storage.js'
+import TaskLegend from './tasklegend.js'
 import Popup from './popup.js'
 import state from '../state.js'
 
@@ -76,11 +77,11 @@ class Workspace extends Element
         const workspaceList = Object.values(this.children.selector.children)
         workspaceList.forEach(item => item.node.dataset.selected = false)
         workspaceList.find(item => item.id == (val ?? "all")).node.dataset.selected = true
-        const projects = state.todo.children.project
-        if (projects.activeProject && projects.getProject(projects.activeProject).workspace !== val) {
-          projects.activeProject = null
+        const project = state.todo.children.project
+        if (project.activeProject && project.getProject(project.activeProject).workspace !== val) {
+          project.activeProject = null
         }
-        projects.children.selector.list = projects.children.selector.list
+        project.children.selector.list = project.children.selector.list
       },
       get: _ => this.fetchActiveWorkspace()
     }
@@ -146,9 +147,18 @@ class Workspace extends Element
             selected: active ? active == id : id == "all"
           },
           children: id == "all" ? {} : {
-            edit: {
-              listeners: {
-                click: e => new Popup(this.addWorkspaceForm(id, value))
+            options: {
+              children:{
+                edit: {
+                  listeners: {
+                    click: e => new Popup(this.addWorkspaceForm(id, value))
+                  }
+                },
+                delete: {
+                  listeners: {
+                    click: e => new Popup(this.deleteWorkspaceForm(id, value))
+                  }
+                }
               }
             }
           }
@@ -166,6 +176,61 @@ class Workspace extends Element
         }
       })
     )
+
+  deleteWorkspaceForm = (id, name) =>
+    ({
+      header: { props: { innerHTML: `Delete the workspace <b>${name}</b> and all its projects and tasks? Cannot be undone!` } },
+      workspaceInfo: {
+        children: Object.assign({}, [
+            { name: "p", props: { innerText: "Projects and tasks assigned to this workspace:" } },
+            ...state.todo.children.project
+              .getProjectList(id)
+              .filter(p => p.id !== 'all')
+              .map(p => {
+                const project = state.todo.children.project.getProject(p.id)
+                return {
+                  name: "projectinfo",
+                  props: { className: "preview" },
+                  children: Object.assign({}, [
+                    { name: "p", props: { innerHTML: `Project <b>${project.name}</b> has these tasks assigned to it:` } },
+                    ...state.todo.children.tasks
+                      .getTasksByProject(p.id)
+                      .map(t => new TaskLegend(t))
+                  ])
+                }
+              }
+              )
+          ])
+      },
+      buttons: {
+        children: {
+          ok: {
+            props: { innerText: "OK", className: "danger" },
+            listeners: {
+              click: _ => this.deleteWorkspace(id)
+            }
+          },
+          cancel: {
+            props: { innerText: "Cancel" },
+            listeners: {
+              click: _ => state.popup.close()
+            }
+          }
+        }
+      }
+    })
+
+  deleteWorkspace = id =>
+  {
+    const select = state.todo.children.workspace.children.selector
+    const list = select.list
+    const project = state.todo.children.project
+    project.getProjectList(id).filter(p => p.id !== 'all').forEach(p => project.deleteProject(p.id))
+    delete list[id]
+    this.activeWorkspace = this.activeWorkspace == id ? null : this.activeWorkspace
+    select.list = list
+    state.popup?.close()
+  }
 }
 
 export default Workspace

@@ -77,7 +77,6 @@ class Tasks extends Element
               const project = state.todo.children.project
               const workspace = state.todo.children.workspace
               obj.children = project.getProjectOptions(
-                project.fetchProjectList(),
                 task ? null : workspace.fetchActiveWorkspace(),
                 task ? task.project : project.fetchActiveProject()
               )
@@ -170,7 +169,7 @@ class Tasks extends Element
     const list = this.list
     delete list[id]
     this.list = list
-    state.popup.close()
+    state.popup?.close()
   }
 }
 
