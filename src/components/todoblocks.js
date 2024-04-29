@@ -1,4 +1,4 @@
-import { Element }   from '../element.js'
+import  Element   from '../element.js'
 import TodoBlock from './todoblock.js'
 
 class TodoBlocks extends Element

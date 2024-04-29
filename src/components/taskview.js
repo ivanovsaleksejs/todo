@@ -1,7 +1,7 @@
 import { form, formRow } from './form.js'
 import Popup from './popup.js'
 import CommitList from './commitlist.js'
-import { Element }   from '../element.js'
+import Element   from '../element.js'
 import state     from '../state.js'
 
 class TaskView extends Element

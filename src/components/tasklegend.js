@@ -1,6 +1,6 @@
 import TaskView from './taskview.js'
 import Popup from './popup.js'
-import { Element }   from '../element.js'
+import Element   from '../element.js'
 import state     from '../state.js'
 
 class TaskLegend extends Element

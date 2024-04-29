@@ -1,4 +1,3 @@
-import { element } from './element.js'
 import state from './state.js'
 import Todo from './components/todo.js'
 

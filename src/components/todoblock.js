@@ -1,4 +1,4 @@
-import { Element }   from '../element.js'
+import Element   from '../element.js'
 import { readData, saveData } from '../storage.js'
 import TaskLegend from './tasklegend.js'
 import Popup from './popup.js'
@@ -126,11 +126,11 @@ class TodoBlock extends Element
     this.blockName = blockName,
     this.type = type
     this.props = { className: className }
-    this.legend.props = { innerText: blockName }
     this.todoField.fieldType = type
-    this.legend.toggleOpened.listeners = { click: this.toggleOpened }
-    this.legend.toggleActive.listeners = { click: this.toggleActive }
-    this.legend.preview.listeners = { click: this.togglePreview }
+    this.legend.props = { innerText: blockName }
+    this.legend.children.toggleOpened.listeners = { click: this.toggleOpened }
+    this.legend.children.toggleActive.listeners = { click: this.toggleActive }
+    this.legend.children.preview.listeners = { click: this.togglePreview }
   }
 
   redraw = _ =>

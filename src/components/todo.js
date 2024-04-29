@@ -1,4 +1,4 @@
-import { Element } from '../element.js'
+import Element from '../element.js'
 import TodoBlocks  from './todoblocks.js'
 import Workspace   from './workspace.js'
 import Project     from './projects.js'

@@ -1,4 +1,4 @@
-import { Element }   from '../element.js'
+import Element   from '../element.js'
 import { form, formRow } from './form.js'
 import { randomUUID } from '../functions.js'
 import { readData, saveData } from '../storage.js'
