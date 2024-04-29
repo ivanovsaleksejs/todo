@@ -79,7 +79,7 @@ class TodoBlock extends Element
           name: "button",
           props: { className: "add" },
           listeners: {
-            click: e => new Popup(state.todo.children.tasks.addTaskForm(this.type))
+            click: e => new Popup(state.todo.tasks.addTaskForm(this.type))
           }
         },
       }
@@ -90,11 +90,11 @@ class TodoBlock extends Element
       },
       assignChildren: obj => {
         obj.children = Object.assign({},
-          state.todo.children.tasks
+          state.todo.tasks
             .getTasksByProject(
-              state.todo.children.project.activeProject,
+              state.todo.project.activeProject,
               this.type,
-              state.todo.children.workspace.activeWorkspace
+              state.todo.workspace.activeWorkspace
             )
             .filter(t => Object.values(this.filterMethods).every(f => f(t[1])))
             .map(t => new TaskLegend(t))
@@ -103,17 +103,17 @@ class TodoBlock extends Element
       listeners: {
         dragover: e => {
           e.preventDefault()
-          Object.values(state.todo.children.todoblocks.children).map(b => {
-            b.children.todoField.node.classList.remove("current")
+          Object.values(state.todo.todoblocks.children).map(b => {
+            b.todoField.node.classList.remove("current")
           })
           e.target.classList.add("current")
         },
         drop: e => {
-          state.todo.children.todoblocks.node.classList.remove("dragging")
+          state.todo.todoblocks.node.classList.remove("dragging")
           const taskId = e.dataTransfer.getData("task")
-          const taskList = state.todo.children.tasks.list
+          const taskList = state.todo.tasks.list
           taskList[taskId].todoList = this.type
-          state.todo.children.tasks.list = taskList
+          state.todo.tasks.list = taskList
         }
       }
     }
@@ -126,16 +126,16 @@ class TodoBlock extends Element
     this.blockName = blockName,
     this.type = type
     this.props = { className: className }
-    this.children.legend.props = { innerText: blockName }
-    this.children.todoField.fieldType = type
-    this.children.legend.children.toggleOpened.listeners = { click: this.toggleOpened }
-    this.children.legend.children.toggleActive.listeners = { click: this.toggleActive }
-    this.children.legend.children.preview.listeners = { click: this.togglePreview }
+    this.legend.props = { innerText: blockName }
+    this.todoField.fieldType = type
+    this.legend.toggleOpened.listeners = { click: this.toggleOpened }
+    this.legend.toggleActive.listeners = { click: this.toggleActive }
+    this.legend.preview.listeners = { click: this.togglePreview }
   }
 
   redraw = _ =>
   {
-    let todoField = this.children.todoField
+    let todoField = this.todoField
     todoField.node.classList.remove("current")
     todoField.prepareNode(true)
   }

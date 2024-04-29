@@ -22,12 +22,12 @@ class TaskView extends Element
             children: {
               edit: {
                 listeners: {
-                  click: e => new Popup(state.todo.children.tasks.addTaskForm(this.task.todoList, this.id, this.task))
+                  click: e => new Popup(state.todo.tasks.addTaskForm(this.task.todoList, this.id, this.task))
                 }
               },
               delete: {
                 listeners: {
-                  click: e => new Popup(state.todo.children.tasks.deleteTaskForm(this.id, this.task))
+                  click: e => new Popup(state.todo.tasks.deleteTaskForm(this.id, this.task))
                 }
               }
             }
@@ -59,7 +59,7 @@ class TaskView extends Element
 
   postRender = {
     fetchCommits: _ => this.fetchCommits().then(
-      commits => (new CommitList(commits)).appendTo(this.children.commits)
+      commits => (new CommitList(commits)).appendTo(this.commits)
     )
   }
 
@@ -86,17 +86,17 @@ class TaskView extends Element
 
   closeTask = checked =>
   {
-    const tasks = state.todo.children.tasks.list
+    const tasks = state.todo.tasks.list
     tasks[this.id].closed = checked
-    state.todo.children.tasks.list = tasks
+    state.todo.tasks.list = tasks
     state.popup.close()
   }
 
   setActive = checked =>
   {
-    const activeTasks = state.todo.children.tasks.activeTasks
+    const activeTasks = state.todo.tasks.activeTasks
     activeTasks[this.task.project] = checked ? this.id : null
-    state.todo.children.tasks.activeTasks = activeTasks
+    state.todo.tasks.activeTasks = activeTasks
     state.popup.close()
   }
 }

@@ -32,14 +32,14 @@ class Workspace extends Element
         list: {
           set: val => {
             this.storeWorkspaceList(val)
-            this.children.selector.children = this.getWorkspaceList(val)
-            this.children.selector.prepareNode(true)
+            this.selector.children = this.getWorkspaceList(val)
+            this.selector.prepareNode(true)
           },
           get: _ => this.fetchWorkspaceList()
         }
       },
       preRender: {
-        getChildren: _ => this.children.selector.children = this.getWorkspaceList(this.fetchWorkspaceList(), this.fetchActiveWorkspace())
+        getChildren: _ => this.selector.children = this.getWorkspaceList(this.fetchWorkspaceList(), this.fetchActiveWorkspace())
       }
     },
     prev: {
@@ -74,14 +74,14 @@ class Workspace extends Element
     activeWorkspace: {
       set: val => {
         this.storeActiveWorkspace(val)
-        const workspaceList = Object.values(this.children.selector.children)
+        const workspaceList = Object.values(this.selector.children)
         workspaceList.forEach(item => item.node.dataset.selected = false)
         workspaceList.find(item => item.id == (val ?? "all")).node.dataset.selected = true
-        const project = state.todo.children.project
+        const project = state.todo.project
         if (project.activeProject && project.getProject(project.activeProject).workspace !== val) {
           project.activeProject = null
         }
-        project.children.selector.list = project.children.selector.list
+        project.selector.list = project.selector.list
       },
       get: _ => this.fetchActiveWorkspace()
     }
@@ -120,9 +120,9 @@ class Workspace extends Element
 
   saveWorkspace = (workspaceName, workspaceId) =>
   {
-    const list = this.children.selector.list
+    const list = this.selector.list
     list[workspaceId] = workspaceName
-    this.children.selector.list = list
+    this.selector.list = list
   }
 
   fetchWorkspaceList = _ => readData("workspaces", {})
@@ -183,17 +183,17 @@ class Workspace extends Element
       workspaceInfo: {
         children: Object.assign({}, [
             { name: "p", props: { innerText: "Projects and tasks assigned to this workspace:" } },
-            ...state.todo.children.project
+            ...state.todo.project
               .getProjectList(id)
               .filter(p => p.id !== 'all')
               .map(p => {
-                const project = state.todo.children.project.getProject(p.id)
+                const project = state.todo.project.getProject(p.id)
                 return {
                   name: "projectinfo",
                   props: { className: "preview" },
                   children: Object.assign({}, [
                     { name: "p", props: { innerHTML: `Project <b>${project.name}</b> has these tasks assigned to it:` } },
-                    ...state.todo.children.tasks
+                    ...state.todo.tasks
                       .getTasksByProject(p.id)
                       .map(t => new TaskLegend(t))
                   ])
@@ -222,9 +222,9 @@ class Workspace extends Element
 
   deleteWorkspace = id =>
   {
-    const select = state.todo.children.workspace.children.selector
+    const select = state.todo.workspace.selector
     const list = select.list
-    const project = state.todo.children.project
+    const project = state.todo.project
     project.getProjectList(id).filter(p => p.id !== 'all').forEach(p => project.deleteProject(p.id))
     delete list[id]
     this.activeWorkspace = this.activeWorkspace == id ? null : this.activeWorkspace

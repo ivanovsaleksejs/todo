@@ -27,9 +27,9 @@ class Project extends Element
         list: {
           set: val => {
             this.storeProjectList(val)
-            this.children.selector.children = this.getProjectList(state.todo.activeWorkspace)
-            this.children.selector.prepareNode(true)
-            state.todo.children.todoblocks.redraw()
+            this.selector.children = this.getProjectList(state.todo.activeWorkspace)
+            this.selector.prepareNode(true)
+            state.todo.todoblocks.redraw()
           },
           get: _ => this.fetchProjectList()
         }
@@ -39,8 +39,8 @@ class Project extends Element
       },
       preRender: {
         getChildren: _ => {
-          this.children.selector.children = this.getProjectList(
-            state.todo.children.workspace.activeWorkspace,
+          this.selector.children = this.getProjectList(
+            state.todo.workspace.activeWorkspace,
             this.fetchActiveProject()
           )
         }
@@ -49,7 +49,7 @@ class Project extends Element
     prev: {
       listeners: {
         click: e => {
-          const projectList = Object.entries(this.getProjectList(state.todo.children.workspace.activeWorkspace, this.activeProject))
+          const projectList = Object.entries(this.getProjectList(state.todo.workspace.activeWorkspace, this.activeProject))
           let index = projectList.findIndex(([id, val]) => val.id == this.activeProject)
           if (index < 0) {
             index = projectList.length
@@ -62,7 +62,7 @@ class Project extends Element
     next: {
       listeners: {
         click: e => {
-          const projectList = Object.entries(this.getProjectList(state.todo.children.workspace.activeWorkspace, this.activeProject))
+          const projectList = Object.entries(this.getProjectList(state.todo.workspace.activeWorkspace, this.activeProject))
           let index = projectList.findIndex(([id, val]) => val.id == this.activeProject)
           if (index > projectList.length || index < 0) {
             index = 0
@@ -78,13 +78,13 @@ class Project extends Element
     activeProject: {
       set: val => {
         this.storeActiveProject(val)
-        const projectList = this.children.selector.children
+        const projectList = this.selector.children
         projectList.forEach(item => item.node ? item.node.dataset.selected = false : null)
         const newActiveProject = projectList.find(item => item.id === (val ?? "all")) ?? projectList.find(item => item.id === "all")
         if (newActiveProject && newActiveProject.node) {
           newActiveProject.node.dataset.selected = true
         }
-        state.todo.children.todoblocks.redraw()
+        state.todo.todoblocks.redraw()
       },
       get: _ => this.fetchActiveProject()
     }
@@ -169,15 +169,15 @@ class Project extends Element
 
   saveProject = (id, name, color, workspace, code, repo) =>
   {
-    const select = state.todo.children.project.children.selector
+    const select = state.todo.project.selector
     const list = select.list
     const oldWorkspace = list[id] ? list[id].workspace : false
     list[id] = { name, color, workspace, code, repo }
     select.list = list
-    if (oldWorkspace && oldWorkspace == state.todo.children.workspace.activeWorkspace) {
-      state.todo.children.workspace.activeWorkspace = workspace
+    if (oldWorkspace && oldWorkspace == state.todo.workspace.activeWorkspace) {
+      state.todo.workspace.activeWorkspace = workspace
     }
-    state.todo.children.todoblocks.redraw()
+    state.todo.todoblocks.redraw()
   }
 
   addProjectForm = (id, project) =>
@@ -197,8 +197,8 @@ class Project extends Element
           props: { name: "workspace" },
           preRender: {
             getChildren: obj => {
-              const workspace = state.todo.children.workspace
-              obj.children = workspace.getWorkspaceOptions(workspace.children.selector.list, project ? project.workspace : workspace.activeWorkspace)
+              const workspace = state.todo.workspace
+              obj.children = workspace.getWorkspaceOptions(workspace.selector.list, project ? project.workspace : workspace.activeWorkspace)
             }
           }
         }),
@@ -220,7 +220,7 @@ class Project extends Element
         props: { className: "preview" },
         children: Object.assign({}, [
             { name: "p", props: { innerText: "Tasks assigned to this project:" } },
-            ...state.todo.children.tasks
+            ...state.todo.tasks
               .getTasksByProject(id)
               .map(t => new TaskLegend(t))
           ])
@@ -245,9 +245,9 @@ class Project extends Element
 
   deleteProject = id =>
   {
-    const select = this.children.selector
+    const select = this.selector
     const list = select.list
-    state.todo.children.tasks.getTasksByProject(id).map(([id, _]) => state.todo.children.tasks.deleteTask(id))
+    state.todo.tasks.getTasksByProject(id).map(([id, _]) => state.todo.tasks.deleteTask(id))
     delete list[id]
     this.activeProject = this.activeProject == id ? null : this.activeProject
     select.list = list

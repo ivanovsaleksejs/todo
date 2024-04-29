@@ -14,14 +14,14 @@ class TaskLegend extends Element
   listeners = {
     click: e => new Popup(new TaskView(this.id, this.task)),
     dragstart: e => {
-      state.todo.children.todoblocks.node.classList.add("dragging")
+      state.todo.todoblocks.node.classList.add("dragging")
       e.dataTransfer.setData("task", this.id)
     }
   }
 
   bindings = {
     task: {
-      get: _ => state.todo.children.tasks.getTaskById(this.id)
+      get: _ => state.todo.tasks.getTaskById(this.id)
     }
   }
 
@@ -30,13 +30,13 @@ class TaskLegend extends Element
     super()
 
     this.id = id
-    this.children.code.props = { innerText: task.code }
+    this.code.props = { innerText: task.code }
     this.props = {
       style: { backgroundColor: task.color },
       draggable: true,
       className: [task.closed ? "closed" : null, task.active ? "active" : null].join(" ")
     }
-    this.children.tooltip.props = { innerText: task.name }
+    this.tooltip.props = { innerText: task.name }
   }
 }
 

@@ -12,11 +12,11 @@ class Tasks extends Element
     list: {
       set: val => {
         this.storeTaskList(val)
-        state.todo.children.todoblocks.redraw()
+        state.todo.todoblocks.redraw()
       },
       get: _ => {
-        const projectList = state.todo.children.project.children.selector.list
-        const activeTasks = state.todo.children.tasks.activeTasks
+        const projectList = state.todo.project.selector.list
+        const activeTasks = state.todo.tasks.activeTasks
         const list = Object.entries(this.fetchTaskList())
           .map(([id, task]) => [id, ({
             ...task,
@@ -30,7 +30,7 @@ class Tasks extends Element
     activeTasks: {
       set: val => {
         this.storeActiveTasks(val)
-        state.todo.children.todoblocks.redraw()
+        state.todo.todoblocks.redraw()
       },
       get: _ => this.fetchActiveTasks()
     }
@@ -51,7 +51,7 @@ class Tasks extends Element
       .filter(t =>
         (!project || t[1].project == project)
         &&
-        (!workspace || state.todo.children.project.getProject(t[1].project).workspace == workspace)
+        (!workspace || state.todo.project.getProject(t[1].project).workspace == workspace)
         &&
         (!list || t[1].todoList == list)
       )
@@ -74,8 +74,8 @@ class Tasks extends Element
           props: { name: "project" },
           preRender: {
             getChildren: obj => {
-              const project = state.todo.children.project
-              const workspace = state.todo.children.workspace
+              const project = state.todo.project
+              const workspace = state.todo.workspace
               obj.children = project.getProjectOptions(
                 task ? null : workspace.fetchActiveWorkspace(),
                 task ? task.project : project.fetchActiveProject()
@@ -112,7 +112,7 @@ class Tasks extends Element
     const formdata = new FormData(e.target)
     const taskName = formdata.get("taskname")
     const projectId = formdata.get("project")
-    const project = state.todo.children.project.getProject(projectId)
+    const project = state.todo.project.getProject(projectId)
     const projectTasks = this.getTasksByProject(projectId)
     const description = formdata.get("taskdescription")
     const todoList = formdata.get("list")
@@ -126,7 +126,7 @@ class Tasks extends Element
 
   saveTask = (id, name, project, description, todoList, code) =>
   {
-    const list = state.todo.children.tasks.list
+    const list = state.todo.tasks.list
     list[id] = {
       name,
       project,
@@ -134,7 +134,7 @@ class Tasks extends Element
       todoList,
       code
     }
-    state.todo.children.tasks.list = list
+    state.todo.tasks.list = list
   }
 
   deleteTaskForm = (id, task) =>
