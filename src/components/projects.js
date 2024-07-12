@@ -202,7 +202,7 @@ class Project extends Element
             }
           }
         }),
-        projectRepo: formRow("Project code repository", { name: "input", props: { name: "repo" } }),
+        projectRepo: formRow("Project code repository", { name: "input", props: { name: "repo", value: project && project.repo ? project.repo : "" } }),
         projectId: { name: "input", props: { type: "hidden", name: "id", value: (id ?? "") } },
         submit: { name: "input", props: { type: "submit" } }
       },
