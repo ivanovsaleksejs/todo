@@ -1,7 +1,7 @@
 import Element   from '../element.js'
 import { form, formRow } from './form.js'
 import { randomUUID }    from '../functions.js'
-import { readData, saveData, exportData } from '../storage.js'
+import { readData, saveData, exportData, importData } from '../storage.js'
 import TaskLegend from './tasklegend.js'
 import Popup from './popup.js'
 import state from '../state.js'
@@ -23,6 +23,11 @@ class Workspace extends Element
         export: {
           listeners: {
             click: exportData
+          }
+        },
+        import: {
+          listeners: {
+            click: importData
           }
         }
       }

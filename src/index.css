@@ -12,7 +12,7 @@ body {
   margin: 0;
   color: var(--main);
 }
-button, export {
+button, export, import {
   border: 0 none;
   background: transparent;
   color: var(--main-light-solid);
@@ -27,6 +27,9 @@ button.add::after {
 }
 export::after {
   content: "\2913";
+}
+import::after {
+  content: "\2912";
 }
 
 workspace, project {
@@ -60,7 +63,7 @@ selector::after {
 selector item {
   transition: all .3s ease-in-out;
   position: absolute;
-  filter: blur(1px) opacity(0.5);
+  filter: opacity(0.5);
   background-color: var(--main-light-solid);
   color: var(--main);
   padding: 0.5vh 4vw;
@@ -462,6 +465,7 @@ tasklegend info:hover ~ tooltip {
   transform: scale(1);
   filter: none;
   opacity: 1;
+  background: var(--main-bg);
 }
 tasklegend:active tooltip {
   transform: scale(0);
